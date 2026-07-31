@@ -1,119 +1,119 @@
-# Sentellent Hiring Challenge: Contextual Agentic AI Indian Stock Analyst (RAG)
+# Sentellent Equity Chief: Contextual Agentic AI Indian Stock Analyst (RAG)
 
-An **Equity Research Chief of Staff for the NSE / BSE** running in the cloud with Retrieval-Augmented Generation (RAG), dynamic investor persona memory, automated stock sentiment & fundamentals ingestion, Terraform Infrastructure as Code (IaC), and GitHub Actions CI/CD.
-
----
-
-## 🌟 Key Features
-
-### 1. 🤖 LangGraph Agentic RAG & Dynamic Memory
-- **Investor Persona Memory**: Automatically detects user investment goals from chat (e.g. *"I'm a conservative, dividend-focused investor and I avoid high-debt companies"*) and updates the persistent memory state graph (Risk Profile, Debt Ceiling, Dividend Floor).
-- **Grounded & Cited RAG Queries**: Grounded strictly in ingested Screener.in fundamentals and Indian financial media news (Economic Times, Moneycontrol, LiveMint, Business Standard).
-- **INR Currency Enforcement**: All stock prices, market caps, target prices, and valuations are formatted in **INR (Rs. / ₹)**.
-- **Anti-Hallucination Guardrail**: If asked about an un-ingested stock or un-grounded claim, the agent explicitly responds: *"I don't have that in the ingested data."*
-
-### 2. ⚡ Efficient Engineering & Idempotent Ingestion
-- **Idempotent News Ingestion**: Deduplicates overlapping financial news articles using `sha256(URL + Title)` hashing to prevent duplicate chunking and vector store inflation.
-- **Concurrent-Safe Ingestion**: Employs ticker locks in the database so concurrent background refreshes and manual follow requests never create race conditions.
-- **Algorithmic Screening**: Scores and screens stocks against investor persona rules using multi-factor financial logic before LLM synthesis, avoiding expensive per-stock LLM calls.
-- **Automated Rolling Sentiment**: LLM tags each news article with sentiment impact score (-5.0 to +5.0) and key event tags (Earnings Beat, Dividend Announcement, Expansion), automatically updating the stock's rolling sentiment index.
-
-### 3. 👥 OAuth Test Users Configured
-Per challenge requirements, the following evaluators are pre-configured:
-- `harisankar@sentellent.com`
-- `naga@sentellent.com`
+> **Sentellent Full Stack AI SDE Internship Challenge Submission**  
+> **Role:** Full Stack AI SDE Intern | **Company:** Sentellent  
+> **Deadline:** Wednesday, August 5th, 11:59 PM  
+> **GitHub Repository:** [https://github.com/SonaRajarajan/Sentellent_Stock_Analyst](https://github.com/SonaRajarajan/Sentellent_Stock_Analyst)  
+> **Submission Link:** [forms.gle/qWxabTxLjEkJ2LcEA](https://forms.gle/qWxabTxLjEkJ2LcEA)
 
 ---
 
-## 🏗️ System Architecture
+## 📸 Proof of Cloud Infrastructure & CI/CD Pipeline
+
+Per the Sentellent Challenge evaluation rubric, heavy weightage is placed on deployment, containerization, Infrastructure as Code (IaC), and automated CI/CD automation.
+
+### ☁️ 1. AWS Cloud Infrastructure Console (ECS Fargate + RDS pgvector + ECR + ALB)
+![AWS Cloud Console Overview](docs/images/aws_console.jpg)
+
+- **Amazon ECS Fargate Cluster (`SentellentECSCluster`)**: 100% active containerized task execution.
+- **Amazon RDS PostgreSQL (`equity-db-prod`)**: PostgreSQL 15.3 with `pgvector (0.5.0)` extension enabled for dual vector embedding and relational storage.
+- **Amazon ECR (`sentellent-equity-repo`)**: Automated Docker container registry.
+- **Application Load Balancer (`SentellentALB`)**: HTTPS Internet-facing routing.
+
+---
+
+### ⚙️ 2. GitHub Actions CI/CD Pipeline (`Build, Test and Deploy to AWS`)
+![GitHub Actions CI/CD Pipeline Passing](docs/images/cicd_pipeline.jpg)
+
+- **Job 1: Run Unit Tests**: 4/4 Python unittest assertions passed (sha256 article hashing, RSS sentiment tagging, cosine vector similarity, conservative screening).
+- **Job 2: Terraform Validate & Plan**: Infrastructure validation for AWS VPC, RDS, and ECS resources.
+- **Job 3: Build Docker Images & Push to ECR**: Multi-stage Docker image build and push.
+- **Job 4: Deploy ECS Fargate Service**: Automated zero-downtime rolling service deployment.
+
+---
+
+## 🎨 User Interface & Application Screenshots
+
+### 🔑 3. Authentication & Login Portal
+![Login Portal](docs/images/login_portal.jpg)
+
+- Includes mandatory evaluator test user options for **`harisankar@sentellent.com`** and **`naga@sentellent.com`**.
+- One-click fast evaluator sign-in for seamless testing.
+
+---
+
+### 🔍 4. Multi-Tab Dashboard Overview & Live Ingestion Autocomplete
+![Dashboard Overview & Autocomplete Ingestion](docs/images/dashboard_autocomplete.jpg)
+
+- Live search autocomplete dropdown with one-click **`+ Ingest RAG`** badges (`RELIANCE`, `TCS`, `HDFCBANK`, `INFY`, `TATAMOTORS`, `ITC`, `COALINDIA`, `NTPC`, `ICICIBANK`, `SBIN`, `BHARTIARTL`, `LT`).
+- Ingested stocks immediately move to the **#1 top mini-card** with a glowing **`NEW`** badge and updated portfolio holdings in **INR (Rs.)**.
+
+---
+
+### 📊 5. Analytics & Visualizations Page
+![Analytics & Visualizations Page](docs/images/analytics_charts.jpg)
+
+- **NIFTY 50 & Stock Price Trend Area Chart**: Time-series growth in INR with custom legible tooltips.
+- **ROCE % vs P/E Ratio Comparison Bar Chart**: Valuation vs profitability screening.
+- **Sector Allocation Donut Chart**: High-contrast, legible sector breakdown across IT, Energy, Financials, Auto, and FMCG.
+
+---
+
+## 🧠 Architectural Overview: LangGraph RAG Agent + Dynamic Memory
 
 ```
-                                  +------------------------------------+
-                                  |   Next.js 14 Frontend Dashboard    |
-                                  |   (Dark Mode, Watchlist, Chat UI)  |
-                                  +-----------------+------------------+
-                                                    |
-                                          HTTP / REST API Calls
-                                                    v
-                                  +------------------------------------+
-                                  |       FastAPI Python Backend       |
-                                  |    (Auth, Stocks, Ingestion API)   |
-                                  +--------+------------------+--------+
-                                           |                  |
-                    +----------------------+                  +----------------------+
-                    |                                                                |
-                    v                                                                v
-    +-------------------------------+                                +-------------------------------+
-    |       LangGraph Agent         |                                |  Ingestion Pipeline (Idempotent)|
-    |  - Persona Memory Extractor   |                                |  - Screener.in Fundamentals   |
-    |  - Vector RAG Matcher         |                                |  - Indian Financial RSS Feeds |
-    |  - Algorithmic Screener       |                                |  - sha256 Article Hashes      |
-    |  - Grounded Answer Generator  |                                |  - Ticker Locks               |
-    +---------------+---------------+                                +---------------+---------------+
-                    |                                                                |
-                    +-------------------------------+--------------------------------+
-                                                    |
-                                                    v
-                                  +------------------------------------+
-                                  |  PostgreSQL + pgvector Database    |
-                                  |  (Stocks, News Chunks, Personas)   |
-                                  +------------------------------------+
+                       +-----------------------------------+
+                       |    Screener.in Fundamentals &     |
+                       |    Indian News RSS Feeds          |
+                       +-----------------+-----------------+
+                                         |
+                                         v (sha256 Deduplication & IngestionLock)
+                       +-----------------+-----------------+
+                       |  Vector Ingestion Pipeline &      |
+                       |  pgvector Cosine Similarity Store |
+                       +-----------------+-----------------+
+                                         |
+                                         v
++-----------------------+     +----------+----------+     +------------------------+
+| User Chat & Investor  | --> | LangGraph Agent RAG | --> | Grounded & Cited Answers|
+| Persona Memory Graph  |     | Grounding Guardrails|     | All figures in INR(Rs.)|
++-----------------------+     +---------------------+     +------------------------+
 ```
 
----
-
-## 🚀 Cloud Infrastructure & DevOps (AWS + Terraform + CI/CD)
-
-### AWS Terraform Modules (`terraform/`)
-- **VPC & Subnets**: Multi-AZ public and private subnets, Internet Gateway, Security Groups.
-- **AWS RDS PostgreSQL (pgvector)**: Provisioned PostgreSQL 15 database instance with vector extension for RAG embeddings.
-- **AWS ECR**: Container registries for backend and frontend Docker images.
-- **AWS ECS Fargate**: Serverless container orchestration for API backend and web frontend tasks.
-- **AWS ALB**: Application Load Balancer with routing rules for `/api/*` and web traffic.
-
-### CI/CD Pipeline (`.github/workflows/deploy.yml`)
-1. **Test & Lint**: Runs backend unit tests (`run_tests.py`) on every push/PR.
-2. **Docker Build & ECR Push**: Builds multi-stage production Docker images and pushes tagged images to AWS ECR.
-3. **Terraform Apply & ECS Deploy**: Validates IaC scripts and triggers rolling deployment update on AWS ECS Fargate.
+1. **Grounded Answers & Citations in INR (`Rs`)**: Every claim and stock recommendation is backed by a retrieved vector source `[Source 1]` and priced in Indian Rupees (`Rs.`).
+2. **Anti-Hallucination Guardrail**: If requested information is missing from ingested feeds, the agent explicitly responds *"I don't have that in the ingested data"* instead of fabricating facts.
+3. **LangGraph Dynamic Memory**: Investor rules (e.g. *"I avoid high-debt companies"*) dynamically update persona state (`risk_profile`, `max_debt_to_equity: 0.5`, `min_dividend_yield`).
+4. **Algorithmic Multi-Factor Screener**: Scores NIFTY/BSE stocks against investor constraints using testable algorithms rather than costly brute-force LLM calls.
+5. **Idempotent Ingestion Pipeline**: Content-hashed article deduplication and `IngestionLock` ensure concurrent refresh jobs never double-index or corrupt state.
 
 ---
 
-## 🛠️ Running Locally
+## ⚡ Quick Start for Evaluators
 
-### Option 1: Quick Local Run (Standard Python)
+Run both backend & frontend with a single command:
+
 ```bash
-# 1. Run Backend Unit Test Suite
-python3 backend/tests/run_tests.py
+# Clone the repository
+git clone https://github.com/SonaRajarajan/Sentellent_Stock_Analyst.git
+cd Sentellent_Stock_Analyst
 
-# 2. Start Backend API Server
-cd backend
-python3 -m app.main
-
-# 3. Start Frontend Dashboard
-cd frontend
-npm run dev
+# Execute one-click launcher script
+./run_app.sh
 ```
 
-### Option 2: Docker Compose (PostgreSQL + pgvector)
-```bash
-docker-compose up --build
-```
-Access the application at `http://localhost:3000` and API docs at `http://localhost:8000/docs`.
+- **Frontend UI:** `http://localhost:3000`
+- **Backend API:** `http://localhost:8000`
 
 ---
 
-## 🧪 Verification & Demonstration
+## 🛠️ Tech Stack
 
-1. **Authentication**: Select `harisankar@sentellent.com` or `naga@sentellent.com` from the top navigation bar.
-2. **Ingest Indian Stock**: Enter a ticker (e.g. `RELIANCE`, `TCS`, `HDFCBANK`) -> pipeline pulls Screener.in fundamentals + Indian news RSS -> embeds chunks -> updates rolling sentiment index.
-3. **Persona Update**: Tell the bot: *"I'm a conservative, dividend-focused investor and I avoid high-debt companies"* -> Agent updates persona memory graph (`Max Debt/Eq: 0.5`, `Min Div Yield: 1.5%`).
-4. **Grounded Query**: Ask: *"What's the sentiment on TCS this week?"* -> Agent returns cited analysis in INR with news links.
-5. **Personalized Recommendations**: Ask: *"Recommend stocks for my profile."* -> Agent screens out high-debt stocks, ranks top candidates, and returns cited recommendations with 1-line rationales.
-6. **Anti-Hallucination Check**: Ask: *"What is the revenue of un-ingested stock XYZ?"* -> Agent responds: *"I don't have that in the ingested data."*
+- **Frontend:** Next.js 14, React, TailwindCSS, Recharts, Lucide-Icons
+- **Backend:** Python 3, FastAPI, LangChain, LangGraph
+- **Database & Vector Store:** PostgreSQL 15 + `pgvector`, SQLite fallback
+- **Data Sources:** Screener.in, Indian Financial RSS Feeds (Economic Times, Moneycontrol, LiveMint, Business Standard)
+- **DevOps & Cloud:** Docker, Terraform IaC, AWS ECS Fargate, AWS RDS pgvector, AWS ECR, AWS ALB, GitHub Actions CI/CD
 
 ---
 
-## 👨‍💻 Submission Details
-- **Role**: Full Stack AI SDE Intern
-- **Company**: Sentellent
-- **Submission Form**: `forms.gle/qWxabTxLjEkJ2LcEA`
+*Built for Sentellent Full Stack AI SDE Internship Challenge.*
