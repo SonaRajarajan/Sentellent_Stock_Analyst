@@ -73,6 +73,21 @@ cd Sentellent_Stock_Analyst
 
 ---
 
+## 
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/e1d61f4f-977d-4880-a863-78e367a5d0fc" />
+
+
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/aba9767a-c545-4215-bf89-198f55234ec7" />
+
+
+
+
+
+
+
+
+
+
 ## 🔑 Evaluator Access & Test Accounts
 
 Per the challenge specification, pre-configured test user access is available for evaluators:
