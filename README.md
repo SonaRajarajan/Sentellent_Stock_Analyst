@@ -74,6 +74,9 @@ cd Sentellent_Stock_Analyst
 ---
 
 ## 
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/e01f22ff-42fe-4330-9751-703e0be340e7" />
+
+
 <img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/e1d61f4f-977d-4880-a863-78e367a5d0fc" />
 
 
@@ -81,10 +84,17 @@ cd Sentellent_Stock_Analyst
 
 
 
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/79ebe975-25d5-4bb1-9700-aed04371c132" />
 
 
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/e133b674-c7c2-4d25-8b76-5b566cae4829" />
+
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/704471ca-f2a3-4dfd-8c19-a389205f66c2" />
+
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/efcce315-a0ee-412d-a364-e5d6647f8122" />
 
 
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/dc213d65-ea76-43d5-8708-63d33374ee0e" />
 
 
 
