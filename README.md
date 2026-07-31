@@ -59,7 +59,7 @@ flowchart TD
 
 ## Application Screenshots & Cloud Infrastructure Proof
 
-### 1. Supabase Production Cloud Console (Project `yhfvgvfbugoajgbxddxx`)
+### 1. Supabase Production Cloud Console 
 <img width="1470" alt="Supabase Production Cloud Console" src="https://github.com/user-attachments/assets/e01f22ff-42fe-4330-9751-703e0be340e7" />
 
 - **Supabase Cloud Project**: `yhfvgvfbugoajgbxddxx` (`Indian Stock` / `main PRODUCTION`)
