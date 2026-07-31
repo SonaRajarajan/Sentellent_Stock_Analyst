@@ -4,46 +4,74 @@ import React, { useState, useEffect } from 'react';
 import {
   LayoutDashboard, Briefcase, Bot, Search, Plus, ExternalLink,
   UserCheck, BookOpen, BarChart3, RefreshCw, Send, X, Layers, Activity,
-  TrendingUp, TrendingDown, Filter, ShieldCheck, ChevronRight, CheckCircle2, Sliders, ArrowUpRight
+  TrendingUp, TrendingDown, Filter, ShieldCheck, ChevronRight, CheckCircle2,
+  PieChart as PieIcon, LineChart as LineIcon, Lock, LogOut, ArrowUpRight, Check
 } from 'lucide-react';
 import {
   Stock, NewsArticle, Citation, fetchStocks, fetchStockDetail,
   followStock, sendAgentQuery, loginUser, getFallbackStocks
 } from '@/lib/api';
+import {
+  ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip,
+  BarChart, Bar, PieChart, Pie, Cell, Legend
+} from 'recharts';
 
-// Popular Indian Tickers Universe for Live Search Autocomplete Suggestions
-const POPULAR_INDIAN_TICKERS = [
-  { symbol: 'RELIANCE', name: 'Reliance Industries Ltd', sector: 'Energy & Petrochemicals' },
-  { symbol: 'TCS', name: 'Tata Consultancy Services Ltd', sector: 'Information Technology' },
-  { symbol: 'HDFCBANK', name: 'HDFC Bank Ltd', sector: 'Banking & Financials' },
-  { symbol: 'INFY', name: 'Infosys Ltd', sector: 'Information Technology' },
-  { symbol: 'TATAMOTORS', name: 'Tata Motors Ltd', sector: 'Automobile' },
-  { symbol: 'ITC', name: 'ITC Ltd', sector: 'FMCG' },
-  { symbol: 'COALINDIA', name: 'Coal India Ltd', sector: 'Mining & Metals' },
-  { symbol: 'NTPC', name: 'NTPC Ltd', sector: 'Utilities / Power' },
-  { symbol: 'ICICIBANK', name: 'ICICI Bank Ltd', sector: 'Banking & Financials' },
-  { symbol: 'SBIN', name: 'State Bank of India', sector: 'Banking & Financials' },
-  { symbol: 'BHARTIARTL', name: 'Bharti Airtel Ltd', sector: 'Telecom' },
-  { symbol: 'LT', name: 'Larsen & Toubro Ltd', sector: 'Infrastructure' },
-  { symbol: 'BAJFINANCE', name: 'Bajaj Finance Ltd', sector: 'Financial Services' },
-  { symbol: 'MARUTI', name: 'Maruti Suzuki India Ltd', sector: 'Automobile' },
-  { symbol: 'SUNPHARMA', name: 'Sun Pharmaceutical Industries', sector: 'Pharmaceuticals' },
-  { symbol: 'TITAN', name: 'Titan Company Ltd', sector: 'Consumer Goods' },
-  { symbol: 'WIPRO', name: 'Wipro Ltd', sector: 'Information Technology' },
-  { symbol: 'ASIANPAINT', name: 'Asian Paints Ltd', sector: 'Paints & Consumer' }
+// Popular Indian Tickers Universe for Live Search Autocomplete Suggestions & Quick Ingest Pills
+const EXAMPLE_INGEST_COMPANIES = [
+  { symbol: 'RELIANCE', name: 'Reliance Industries Ltd', sector: 'Energy & Petrochemicals', price: 'Rs 2,940.50' },
+  { symbol: 'TCS', name: 'Tata Consultancy Services Ltd', sector: 'Information Technology', price: 'Rs 3,915.20' },
+  { symbol: 'HDFCBANK', name: 'HDFC Bank Ltd', sector: 'Banking & Financials', price: 'Rs 1,630.75' },
+  { symbol: 'INFY', name: 'Infosys Ltd', sector: 'Information Technology', price: 'Rs 1,750.40' },
+  { symbol: 'TATAMOTORS', name: 'Tata Motors Ltd', sector: 'Automobile', price: 'Rs 995.80' },
+  { symbol: 'ITC', name: 'ITC Ltd', sector: 'FMCG', price: 'Rs 492.10' },
+  { symbol: 'COALINDIA', name: 'Coal India Ltd', sector: 'Mining & Metals', price: 'Rs 506.70' },
+  { symbol: 'NTPC', name: 'NTPC Ltd', sector: 'Utilities / Power', price: 'Rs 410.30' },
+  { symbol: 'ICICIBANK', name: 'ICICI Bank Ltd', sector: 'Banking & Financials', price: 'Rs 1,210.00' },
+  { symbol: 'SBIN', name: 'State Bank of India', sector: 'Banking & Financials', price: 'Rs 840.50' },
+  { symbol: 'BHARTIARTL', name: 'Bharti Airtel Ltd', sector: 'Telecom', price: 'Rs 1,480.00' },
+  { symbol: 'LT', name: 'Larsen & Toubro Ltd', sector: 'Infrastructure', price: 'Rs 3,650.00' },
+];
+
+// Recharts Sample Time Series Data
+const TIME_SERIES_DATA = [
+  { date: '1 Jan', NIFTY: 21500, RELIANCE: 2720, TCS: 3750, HDFCBANK: 1580 },
+  { date: '15 Jan', NIFTY: 21800, RELIANCE: 2780, TCS: 3820, HDFCBANK: 1610 },
+  { date: '1 Feb', NIFTY: 21950, RELIANCE: 2850, TCS: 3890, HDFCBANK: 1630 },
+  { date: '15 Feb', NIFTY: 22100, RELIANCE: 2910, TCS: 3950, HDFCBANK: 1640 },
+  { date: '1 Mar', NIFTY: 22350, RELIANCE: 2980, TCS: 4010, HDFCBANK: 1660 },
+  { date: '15 Mar', NIFTY: 22200, RELIANCE: 2920, TCS: 3940, HDFCBANK: 1625 },
+  { date: '1 Apr', NIFTY: 22500, RELIANCE: 3010, TCS: 3980, HDFCBANK: 1650 },
+  { date: '15 Apr', NIFTY: 22750, RELIANCE: 3050, TCS: 4050, HDFCBANK: 1680 },
+  { date: '1 May', NIFTY: 22900, RELIANCE: 3080, TCS: 4120, HDFCBANK: 1710 },
+  { date: '15 May', NIFTY: 23100, RELIANCE: 3120, TCS: 4180, HDFCBANK: 1730 },
+  { date: '1 Jun', NIFTY: 23350, RELIANCE: 3180, TCS: 4250, HDFCBANK: 1760 },
+  { date: '15 Jun', NIFTY: 23600, RELIANCE: 3220, TCS: 4310, HDFCBANK: 1780 },
+  { date: '1 Jul', NIFTY: 24100, RELIANCE: 3290, TCS: 4390, HDFCBANK: 1810 },
+  { date: '15 Jul', NIFTY: 24500, RELIANCE: 3340, TCS: 4460, HDFCBANK: 1840 },
+  { date: '31 Jul', NIFTY: 24800, RELIANCE: 3390, TCS: 4520, HDFCBANK: 1870 },
+];
+
+const SECTOR_PIE_DATA = [
+  { name: 'Information Technology', value: 35, color: '#3b82f6' },
+  { name: 'Energy & Petrochemicals', value: 25, color: '#10b981' },
+  { name: 'Banking & Financials', value: 20, color: '#8b5cf6' },
+  { name: 'Automobile', value: 12, color: '#f59e0b' },
+  { name: 'FMCG & Consumer', value: 8, color: '#ec4899' },
 ];
 
 export default function DashboardPage() {
   // Navigation View State
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'portfolio' | 'agent' | 'screener'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'portfolio' | 'agent' | 'screener' | 'analytics'>('dashboard');
 
-  // Evaluator User State
+  // Auth / Login State
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [currentUser, setCurrentUser] = useState({
     id: 1,
-    email: 'harisankar@sentellent.com',
-    fullName: 'Hari Sankar',
-    isTestUser: true,
+    email: 'analyst@sentellent.com',
+    fullName: 'Equity Research Analyst',
   });
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPass, setLoginPass] = useState('');
 
   // Watchlist & Stock State
   const [stocks, setStocks] = useState<Stock[]>(getFallbackStocks());
@@ -52,6 +80,9 @@ export default function DashboardPage() {
   const [isIngesting, setIsIngesting] = useState(false);
   const [filterType, setFilterType] = useState<'all' | 'low_debt' | 'dividend' | 'bullish'>('all');
   const [notification, setNotification] = useState<string | null>(null);
+
+  // Analytics Chart State
+  const [chartMetric, setChartMetric] = useState<'NIFTY' | 'RELIANCE' | 'TCS' | 'HDFCBANK'>('NIFTY');
 
   // Screener Controls State
   const [screenerMaxDebt, setScreenerMaxDebt] = useState<number>(1.5);
@@ -94,19 +125,17 @@ export default function DashboardPage() {
     setTimeout(() => setNotification(null), 4000);
   };
 
-  const handleSelectTestAccount = async (email: string, name: string) => {
-    try {
-      const res = await loginUser(email, name);
-      setCurrentUser({
-        id: res.user_id,
-        email: res.email,
-        fullName: res.full_name,
-        isTestUser: res.is_test_user,
-      });
-      showNotificationMsg(`Switched to test evaluator account: ${email}`);
-    } catch (e) {
-      setCurrentUser({ id: 1, email, fullName: name, isTestUser: true });
-    }
+  const handleLoginSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!loginEmail.trim()) return;
+    const namePart = loginEmail.split('@')[0];
+    setCurrentUser({
+      id: 1,
+      email: loginEmail,
+      fullName: namePart.charAt(0).toUpperCase() + namePart.slice(1) + " (Analyst)",
+    });
+    setIsLoggedIn(true);
+    showNotificationMsg(`Welcome back, ${loginEmail}!`);
   };
 
   const handleFollowStock = async (symbol: string) => {
@@ -201,14 +230,14 @@ export default function DashboardPage() {
   };
 
   // Autocomplete Suggestions
-  const matchingSuggestions = POPULAR_INDIAN_TICKERS.filter(
+  const matchingSuggestions = EXAMPLE_INGEST_COMPANIES.filter(
     t => searchQuery.trim() !== '' && (
       t.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
 
-  // Filtered Stocks for Dashboard/Portfolio/Screener
+  // Filtered Stocks
   const filteredStocks = stocks.filter(s => {
     if (screenerSearch && !s.symbol.toLowerCase().includes(screenerSearch.toLowerCase()) && !s.name.toLowerCase().includes(screenerSearch.toLowerCase())) {
       return false;
@@ -223,6 +252,60 @@ export default function DashboardPage() {
     return true;
   });
 
+  // Render Login Modal if not logged in
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-[#0b0d14] flex items-center justify-center p-4 font-sans">
+        <div className="glass-panel max-w-md w-full rounded-2xl p-8 border border-[#22283d] space-y-6 shadow-2xl">
+          <div className="text-center space-y-2">
+            <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center font-bold text-white text-xl mx-auto shadow-lg shadow-blue-500/30">
+              S
+            </div>
+            <h1 className="text-2xl font-bold text-white tracking-wide">Sentellent Equity Chief</h1>
+            <p className="text-xs text-slate-400">Sign in to access your Agentic AI Stock Analyst & Screener</p>
+          </div>
+
+          <form onSubmit={handleLoginSubmit} className="space-y-4">
+            <div>
+              <label className="text-xs font-semibold text-slate-300 block mb-1.5">Email Address</label>
+              <input
+                type="email"
+                required
+                placeholder="analyst@sentellent.com"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                className="w-full bg-[#181d2e] border border-[#262d45] rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-semibold text-slate-300 block mb-1.5">Password</label>
+              <input
+                type="password"
+                required
+                placeholder="••••••••"
+                value={loginPass}
+                onChange={(e) => setLoginPass(e.target.value)}
+                className="w-full bg-[#181d2e] border border-[#262d45] rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition text-xs shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2"
+            >
+              <Lock className="w-4 h-4" /> Sign In to Dashboard
+            </button>
+          </form>
+
+          <div className="pt-4 border-t border-[#1e2436] text-center text-xs text-slate-500">
+            Secure RAG Vector Access • PostgreSQL / pgvector Powered
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#0b0d14] text-slate-100 flex font-sans">
       {/* Toast Notification */}
@@ -233,7 +316,7 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Sidebar Navigation (Stovest / VertexGuard Theme) */}
+      {/* Sidebar Navigation */}
       <aside className="w-64 bg-[#10131e] border-r border-[#1e2436] flex flex-col justify-between p-5 hidden md:flex">
         <div className="space-y-6">
           {/* Brand Logo */}
@@ -286,17 +369,29 @@ export default function DashboardPage() {
             >
               <BarChart3 className="w-4 h-4" /> Screener & Ratios
             </button>
+
+            {/* NEW PAGE: Analytics & Visualizations below Screener & Ratios */}
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition ${
+                activeTab === 'analytics' ? 'pill-active' : 'text-slate-400 hover:bg-[#181d2e] hover:text-white'
+              }`}
+            >
+              <PieIcon className="w-4 h-4" /> Analytics & Visualizations
+            </button>
           </div>
         </div>
 
-        {/* System & DB Status */}
+        {/* User Logged In Profile Card */}
         <div className="space-y-3 pt-4 border-t border-[#1e2436]">
-          <div className="bg-[#161b2c] p-3 rounded-xl border border-[#262d45] text-xs">
-            <span className="text-[10px] text-slate-400 font-semibold uppercase block">Postgres / pgvector DB</span>
-            <div className="flex items-center gap-2 mt-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="text-white font-medium text-[11px]">Connected Live</span>
+          <div className="bg-[#161b2c] p-3 rounded-xl border border-[#262d45] flex items-center justify-between">
+            <div className="overflow-hidden">
+              <span className="text-[10px] text-slate-400 font-semibold uppercase block">Logged In User</span>
+              <span className="text-white font-bold text-xs truncate block">{currentUser.email}</span>
             </div>
+            <button onClick={() => setIsLoggedIn(false)} title="Sign Out" className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-[#181d2e]">
+              <LogOut className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </aside>
@@ -352,29 +447,35 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* Evaluator User Switcher */}
+          {/* User Profile Badge */}
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 bg-[#181d2e] border border-[#262d45] rounded-full px-3 py-1.5 text-xs">
-              <UserCheck className="w-4 h-4 text-blue-400" />
-              <select
-                value={currentUser.email}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  if (val === 'harisankar@sentellent.com') handleSelectTestAccount('harisankar@sentellent.com', 'Hari Sankar');
-                  else if (val === 'naga@sentellent.com') handleSelectTestAccount('naga@sentellent.com', 'Naga');
-                  else handleSelectTestAccount('demo@sentellent.com', 'Demo Evaluator');
-                }}
-                className="bg-transparent text-white font-medium focus:outline-none cursor-pointer text-xs"
-              >
-                <option value="harisankar@sentellent.com" className="bg-[#121624]">harisankar@sentellent.com (Test User)</option>
-                <option value="naga@sentellent.com" className="bg-[#121624]">naga@sentellent.com (Test User)</option>
-                <option value="demo@sentellent.com" className="bg-[#121624]">demo@sentellent.com (Demo Evaluator)</option>
-              </select>
+            <div className="bg-[#181d2e] border border-[#262d45] rounded-full px-3 py-1.5 text-xs text-white font-medium flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              {currentUser.email}
             </div>
           </div>
         </header>
 
-        {/* Dynamic Body Views Based on Active Tab */}
+        {/* Example Companies Selector Banner */}
+        <div className="bg-[#0e121d] border-b border-[#1e2436] px-6 py-2.5 flex items-center gap-3 overflow-x-auto">
+          <span className="text-[11px] font-bold text-blue-400 uppercase tracking-wider whitespace-nowrap flex items-center gap-1">
+            ⚡ Quick Ingest Select:
+          </span>
+          <div className="flex items-center gap-2">
+            {EXAMPLE_INGEST_COMPANIES.slice(0, 8).map(comp => (
+              <button
+                key={comp.symbol}
+                onClick={() => handleFollowStock(comp.symbol)}
+                className="text-xs bg-[#181d2e] hover:bg-blue-600 text-slate-300 hover:text-white px-3 py-1 rounded-full border border-[#262d45] transition flex items-center gap-1.5 whitespace-nowrap"
+              >
+                <span className="font-bold">{comp.symbol}</span>
+                <span className="text-[10px] opacity-75">({comp.price})</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Dynamic Body Views */}
         <main className="flex-1 p-6 space-y-6 overflow-y-auto">
           {/* ========================================================= */}
           {/* VIEW 1: DASHBOARD OVERVIEW                                */}
@@ -395,15 +496,15 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="mt-4 pt-4 border-t border-[#1e2436]">
-                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-2">Quick Follow Tickers</span>
+                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-2">Select Example Companies to Ingest</span>
                     <div className="flex flex-wrap gap-1.5">
-                      {['RELIANCE', 'TCS', 'HDFCBANK', 'INFY', 'TATAMOTORS', 'ITC'].map(t => (
+                      {EXAMPLE_INGEST_COMPANIES.slice(0, 6).map(t => (
                         <button
-                          key={t}
-                          onClick={() => handleFollowStock(t)}
+                          key={t.symbol}
+                          onClick={() => handleFollowStock(t.symbol)}
                           className="text-[11px] bg-[#181d2e] hover:bg-blue-600 hover:text-white text-slate-300 px-2.5 py-1 rounded-full border border-[#262d45] transition"
                         >
-                          + {t}
+                          + {t.symbol}
                         </button>
                       ))}
                     </div>
@@ -525,28 +626,6 @@ export default function DashboardPage() {
                   </h2>
                   <p className="text-xs text-slate-400 mt-1">Manage followed tickers, Screener fundamentals, and live watchlist holdings</p>
                 </div>
-
-                {/* Filter Pills */}
-                <div className="flex items-center gap-1.5 bg-[#181d2e] p-1.5 rounded-full border border-[#262d45]">
-                  <button
-                    onClick={() => setFilterType('all')}
-                    className={`text-xs px-3.5 py-1 rounded-full font-semibold transition ${filterType === 'all' ? 'pill-active' : 'text-slate-400'}`}
-                  >
-                    All Tracked ({stocks.length})
-                  </button>
-                  <button
-                    onClick={() => setFilterType('low_debt')}
-                    className={`text-xs px-3.5 py-1 rounded-full font-semibold transition ${filterType === 'low_debt' ? 'pill-active' : 'text-slate-400'}`}
-                  >
-                    Low Debt (&lt;=0.5)
-                  </button>
-                  <button
-                    onClick={() => setFilterType('dividend')}
-                    className={`text-xs px-3.5 py-1 rounded-full font-semibold transition ${filterType === 'dividend' ? 'pill-active' : 'text-slate-400'}`}
-                  >
-                    High Dividend (&gt;=1.5%)
-                  </button>
-                </div>
               </div>
 
               {/* Portfolio Grid Cards */}
@@ -567,12 +646,11 @@ export default function DashboardPage() {
                         <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
                           (stock.rolling_sentiment_score || 0) >= 0 ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-rose-950 text-rose-400 border border-rose-800'
                         }`}>
-                          {stock.sentiment_label || 'Bullish'} ({(stock.rolling_sentiment_score || 0) >= 0 ? '+' : ''}{stock.rolling_sentiment_score || 3.0})
+                          {stock.sentiment_label || 'Bullish'}
                         </span>
                       </div>
                     </div>
 
-                    {/* Fundamental Grid */}
                     <div className="grid grid-cols-4 gap-2 pt-3 border-t border-[#262d45] text-center text-xs">
                       <div>
                         <span className="text-[10px] text-slate-400 block">P/E</span>
@@ -621,7 +699,6 @@ export default function DashboardPage() {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* Persona Inspector Sidebar (4 cols) */}
                 <div className="lg:col-span-4 glass-panel rounded-2xl p-5 border border-[#22283d] space-y-4">
                   <div className="flex items-center gap-3 border-b border-[#1e2436] pb-3">
                     <Layers className="w-5 h-5 text-blue-400" />
@@ -644,14 +721,9 @@ export default function DashboardPage() {
                       <span className="text-slate-400 text-[10px] font-semibold block uppercase">Min Dividend Yield</span>
                       <span className="text-sm font-bold text-blue-400">{persona.min_dividend_yield}%</span>
                     </div>
-                    <div className="bg-[#181d2e] p-3 rounded-xl border border-[#262d45]">
-                      <span className="text-slate-400 text-[10px] font-semibold block uppercase">Summary Rules</span>
-                      <p className="text-slate-300 mt-1 leading-relaxed">{persona.summary_rules}</p>
-                    </div>
                   </div>
                 </div>
 
-                {/* Main Full Chat Assistant (8 cols) */}
                 <div className="lg:col-span-8 glass-panel rounded-2xl border border-[#22283d] flex flex-col h-[600px]">
                   <div className="flex-1 overflow-y-auto p-5 space-y-4 text-xs">
                     {chatMessages.map((msg, index) => (
@@ -667,55 +739,11 @@ export default function DashboardPage() {
                           }`}
                         >
                           <div className="whitespace-pre-line">{msg.text}</div>
-
-                          {msg.citations && msg.citations.length > 0 && (
-                            <div className="mt-3 pt-3 border-t border-[#262d45] flex flex-wrap gap-1.5">
-                              <span className="text-[11px] font-bold text-blue-400 w-full mb-1 flex items-center gap-1">
-                                <BookOpen className="w-3.5 h-3.5" /> Grounded Source Citations:
-                              </span>
-                              {msg.citations.map((cit, cIdx) => (
-                                <button
-                                  key={cIdx}
-                                  onClick={() => setActiveCitation(cit)}
-                                  className="text-[11px] bg-[#10131e] hover:bg-blue-950 text-blue-300 px-2.5 py-1 rounded-lg border border-[#262d45] flex items-center gap-1 transition"
-                                >
-                                  <span>[{cit.id}]</span>
-                                  <span className="truncate max-w-[150px]">{cit.title}</span>
-                                </button>
-                              ))}
-                            </div>
-                          )}
                         </div>
                       </div>
                     ))}
-
-                    {isAgentThinking && (
-                      <div className="flex items-center gap-2 text-xs text-blue-400 bg-[#181d2e] p-3 rounded-xl w-fit animate-pulse">
-                        <Sparkles className="w-4 h-4 animate-spin" />
-                        LangGraph agent is executing vector RAG retrieval & screening...
-                      </div>
-                    )}
                   </div>
 
-                  {/* Prompt Suggestions */}
-                  <div className="p-3 border-t border-[#1e2436] bg-[#10131e] flex flex-wrap gap-2">
-                    {[
-                      "I'm a conservative, dividend-focused investor and I avoid high-debt companies",
-                      "What's the sentiment on TCS this week?",
-                      "Recommend stocks for my profile.",
-                      "What is the revenue of un-ingested stock XYZ?"
-                    ].map((prompt, pIdx) => (
-                      <button
-                        key={pIdx}
-                        onClick={() => handleSendMessage(prompt)}
-                        className="text-[11px] bg-[#181d2e] hover:bg-blue-600 hover:text-white text-slate-300 px-3 py-1 rounded-full border border-[#262d45] transition"
-                      >
-                        💡 {prompt}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Input Bar */}
                   <div className="p-4 border-t border-[#1e2436] bg-[#0b0d14] rounded-b-2xl flex gap-2">
                     <input
                       type="text"
@@ -753,7 +781,7 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Screener Control Panel */}
+              {/* Screener Controls */}
               <div className="glass-panel rounded-2xl p-5 border border-[#22283d] grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-2">Max Debt to Equity Ratio: {screenerMaxDebt}</label>
@@ -766,7 +794,6 @@ export default function DashboardPage() {
                     onChange={(e) => setScreenerMaxDebt(parseFloat(e.target.value))}
                     className="w-full accent-blue-500 cursor-pointer"
                   />
-                  <span className="text-[10px] text-slate-500 block mt-1">Filters out companies with debt exceeding this ceiling</span>
                 </div>
 
                 <div>
@@ -780,7 +807,6 @@ export default function DashboardPage() {
                     onChange={(e) => setScreenerMinDiv(parseFloat(e.target.value))}
                     className="w-full accent-blue-500 cursor-pointer"
                   />
-                  <span className="text-[10px] text-slate-500 block mt-1">Filters companies meeting minimum dividend yield</span>
                 </div>
 
                 <div>
@@ -795,49 +821,161 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Screener Results Table */}
+              {/* Results Table */}
               <div className="glass-panel rounded-2xl p-5 border border-[#22283d]">
-                <h3 className="text-sm font-bold text-white mb-4">Screened Equity Candidates ({filteredStocks.length})</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs">
-                    <thead>
-                      <tr className="border-b border-[#1e2436] text-slate-400 font-semibold">
-                        <th className="pb-3">Ticker</th>
-                        <th className="pb-3">Sector</th>
-                        <th className="pb-3">Market Cap (Cr)</th>
-                        <th className="pb-3">Price (INR)</th>
-                        <th className="pb-3">P/E</th>
-                        <th className="pb-3">Debt/Eq</th>
-                        <th className="pb-3">ROCE %</th>
-                        <th className="pb-3">ROE %</th>
-                        <th className="pb-3">Div Yield</th>
-                        <th className="pb-3 text-right">Full Analysis</th>
+                <table className="w-full text-left text-xs">
+                  <thead>
+                    <tr className="border-b border-[#1e2436] text-slate-400 font-semibold">
+                      <th className="pb-3">Ticker</th>
+                      <th className="pb-3">Sector</th>
+                      <th className="pb-3">Price (INR)</th>
+                      <th className="pb-3">P/E</th>
+                      <th className="pb-3">Debt/Eq</th>
+                      <th className="pb-3">ROCE %</th>
+                      <th className="pb-3 text-right">Full Analysis</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#1e2436]/60">
+                    {filteredStocks.map((s) => (
+                      <tr key={s.symbol} className="hover:bg-[#181d2e]/50 transition">
+                        <td className="py-3 font-bold text-white">{s.symbol}</td>
+                        <td className="py-3 text-slate-400">{s.sector}</td>
+                        <td className="py-3 font-semibold text-white">Rs {s.current_price_inr.toLocaleString()}</td>
+                        <td className="py-3 text-slate-300">{s.pe_ratio}</td>
+                        <td className="py-3 font-semibold text-emerald-400">{s.debt_to_equity}</td>
+                        <td className="py-3 text-slate-300">{s.roce_pct}%</td>
+                        <td className="py-3 text-right">
+                          <button
+                            onClick={() => handleOpenStockDetail(s.symbol)}
+                            className="bg-[#181d2e] hover:bg-blue-600 text-blue-400 hover:text-white px-3 py-1 rounded-lg text-[11px] font-semibold border border-[#262d45] transition"
+                          >
+                            Inspect Ratios
+                          </button>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#1e2436]/60">
-                      {filteredStocks.map((s) => (
-                        <tr key={s.symbol} className="hover:bg-[#181d2e]/50 transition">
-                          <td className="py-3 font-bold text-white">{s.symbol}</td>
-                          <td className="py-3 text-slate-400">{s.sector}</td>
-                          <td className="py-3 text-slate-200">Rs {s.market_cap_cr.toLocaleString()} Cr</td>
-                          <td className="py-3 font-semibold text-white">Rs {s.current_price_inr.toLocaleString()}</td>
-                          <td className="py-3 text-slate-300">{s.pe_ratio}</td>
-                          <td className="py-3 font-semibold text-emerald-400">{s.debt_to_equity}</td>
-                          <td className="py-3 text-slate-300">{s.roce_pct}%</td>
-                          <td className="py-3 text-slate-300">{s.roe_pct}%</td>
-                          <td className="py-3 text-blue-400 font-semibold">{s.dividend_yield_pct}%</td>
-                          <td className="py-3 text-right">
-                            <button
-                              onClick={() => handleOpenStockDetail(s.symbol)}
-                              className="bg-[#181d2e] hover:bg-blue-600 text-blue-400 hover:text-white px-3 py-1 rounded-lg text-[11px] font-semibold border border-[#262d45] transition"
-                            >
-                              Inspect Ratios
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ========================================================= */}
+          {/* NEW VIEW 5: DEDICATED ANALYTICS & VISUALIZATIONS PAGE    */}
+          {/* ========================================================= */}
+          {activeTab === 'analytics' && (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                    <PieIcon className="w-5 h-5 text-blue-400" /> Market Analytics & Financial Visualizations
+                  </h2>
+                  <p className="text-xs text-slate-400 mt-1">Interactive chart analysis for NIFTY 50 and Screener.in fundamental distributions</p>
+                </div>
+
+                {/* Metric Selector Toggle */}
+                <div className="flex items-center gap-2 bg-[#181d2e] p-1 rounded-full border border-[#262d45]">
+                  {(['NIFTY', 'RELIANCE', 'TCS', 'HDFCBANK'] as const).map(m => (
+                    <button
+                      key={m}
+                      onClick={() => setChartMetric(m)}
+                      className={`text-xs px-3 py-1 rounded-full font-semibold transition ${chartMetric === m ? 'pill-active' : 'text-slate-400'}`}
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Top Chart Row: Time Series Area Chart */}
+              <div className="glass-panel rounded-2xl p-6 border border-[#22283d] space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                    <LineIcon className="w-4 h-4 text-blue-400" /> Price History & Growth Trend ({chartMetric} in INR)
+                  </h3>
+                  <span className="text-xs text-emerald-400 font-semibold flex items-center">
+                    <TrendingUp className="w-3.5 h-3.5 mr-1" /> +15.3% YTD Growth
+                  </span>
+                </div>
+
+                <div className="h-72 w-full pt-2">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={TIME_SERIES_DATA}>
+                      <defs>
+                        <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4}/>
+                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.0}/>
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="date" stroke="#64748b" fontSize={11} tickLine={false} />
+                      <YAxis stroke="#64748b" fontSize={11} tickLine={false} domain={['auto', 'auto']} />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: '#121624', borderColor: '#262d45', borderRadius: '12px', fontSize: '12px' }}
+                        itemStyle={{ color: '#60a5fa' }}
+                      />
+                      <Area type="monotone" dataKey={chartMetric} stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#blueGradient)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Bottom Chart Row: Bar Chart & Sector Allocation Pie Chart */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Bar Chart: ROCE vs P/E Comparison */}
+                <div className="lg:col-span-7 glass-panel rounded-2xl p-5 border border-[#22283d] space-y-4">
+                  <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                    <BarChart3 className="w-4 h-4 text-blue-400" /> ROCE % vs P/E Ratio Comparison
+                  </h3>
+                  <div className="h-60 w-full pt-2">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={stocks}>
+                        <XAxis dataKey="symbol" stroke="#64748b" fontSize={11} tickLine={false} />
+                        <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
+                        <Tooltip
+                          contentStyle={{ backgroundColor: '#121624', borderColor: '#262d45', borderRadius: '12px', fontSize: '12px' }}
+                        />
+                        <Bar dataKey="roce_pct" name="ROCE %" fill="#3b82f6" radius={[6, 6, 0, 0]} />
+                        <Bar dataKey="pe_ratio" name="P/E Ratio" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* Pie Chart: Sector Allocation Breakdown */}
+                <div className="lg:col-span-5 glass-panel rounded-2xl p-5 border border-[#22283d] space-y-4">
+                  <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                    <PieIcon className="w-4 h-4 text-blue-400" /> Ingested Sector Distribution
+                  </h3>
+                  <div className="h-60 w-full flex items-center justify-center">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={SECTOR_PIE_DATA}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={50}
+                          outerRadius={85}
+                          paddingAngle={4}
+                          dataKey="value"
+                        >
+                          {SECTOR_PIE_DATA.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <Tooltip
+                          contentStyle={{ backgroundColor: '#121624', borderColor: '#262d45', borderRadius: '12px', fontSize: '12px' }}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                  <div className="flex flex-wrap gap-2 justify-center pt-2">
+                    {SECTOR_PIE_DATA.map(d => (
+                      <span key={d.name} className="text-[10px] text-slate-300 flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }}></span>
+                        {d.name} ({d.value}%)
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -875,66 +1013,7 @@ export default function DashboardPage() {
                   {selectedStock.stock?.debt_to_equity || '0'}
                 </span>
               </div>
-              <div>
-                <span className="text-xs text-slate-400 block">ROCE %</span>
-                <span className="text-sm font-bold text-white">{selectedStock.stock?.roce_pct || '0'}%</span>
-              </div>
-              <div>
-                <span className="text-xs text-slate-400 block">Dividend Yield</span>
-                <span className="text-sm font-bold text-blue-400">{selectedStock.stock?.dividend_yield_pct || '0'}%</span>
-              </div>
-              <div>
-                <span className="text-xs text-slate-400 block">Rolling Sentiment</span>
-                <span className="text-sm font-bold text-emerald-400">{selectedStock.stock?.sentiment_label || 'Bullish'} ({selectedStock.stock?.rolling_sentiment_score || '3.0'})</span>
-              </div>
             </div>
-
-            {/* Ingested News Feed */}
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider mb-3">Ingested Financial News Feed</h4>
-            <div className="space-y-3">
-              {(selectedStock.news || []).map((n) => (
-                <div key={n.id} className="bg-[#0b0d14] border border-[#1e2436] rounded-xl p-3 text-xs">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-semibold text-blue-400">{n.title}</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-[#181d2e] text-slate-400">{n.source}</span>
-                  </div>
-                  <p className="text-slate-300 mb-2">{n.raw_text}</p>
-                  <div className="flex items-center gap-2 text-[10px]">
-                    <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">Tag: {n.key_event_tag}</span>
-                    <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">Sentiment: {n.llm_sentiment}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Citation Detail Modal */}
-      {activeCitation && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="glass-panel bg-[#121624] rounded-2xl max-w-md w-full border border-[#262d45] p-6">
-            <div className="flex items-center justify-between border-b border-[#1e2436] pb-3 mb-3">
-              <span className="text-xs font-bold text-blue-400 uppercase">Citation [{activeCitation.id}]</span>
-              <button onClick={() => setActiveCitation(null)} className="p-1 text-slate-400 hover:text-white rounded bg-[#181d2e] border border-[#262d45]">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-            <h4 className="text-sm font-bold text-white mb-1">{activeCitation.title}</h4>
-            <p className="text-xs text-slate-400 mb-3">Source: {activeCitation.source} | Stock: {activeCitation.symbol}</p>
-            <div className="bg-[#0b0d14] p-3 rounded-xl border border-[#1e2436] text-xs text-slate-300 leading-relaxed mb-4">
-              "{activeCitation.text}"
-            </div>
-            {activeCitation.url && activeCitation.url !== '#' && (
-              <a
-                href={activeCitation.url}
-                target="_blank"
-                rel="noreferrer"
-                className="text-xs text-blue-400 hover:underline flex items-center gap-1 font-semibold"
-              >
-                View Original Published Source <ExternalLink className="w-3 h-3" />
-              </a>
-            )}
           </div>
         </div>
       )}
