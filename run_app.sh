@@ -1,32 +1,28 @@
 #!/bin/bash
+# Sentellent Equity Chief - One-Click Launcher Script
 
-echo "=========================================================="
-echo "🚀 Starting Sentellent Contextual Agentic AI Stock Analyst"
-echo "=========================================================="
+echo "🚀 Starting Sentellent Equity Chief Backend & Frontend..."
 
-# 1. Run Backend Unit Tests
-echo "🧪 Running Backend Unit Tests..."
-python3 backend/tests/run_tests.py
-if [ $? -ne 0 ]; then
-  echo "❌ Backend tests failed!"
-  exit 1
-fi
-echo "✅ Backend tests passed cleanly!"
+# Kill any existing processes on ports 8000 & 3000
+lsof -ti :8000 | xargs kill -9 2>/dev/null || true
+lsof -ti :3000 | xargs kill -9 2>/dev/null || true
 
-# 2. Start Backend FastAPI Server in background
-echo "⚡ Starting FastAPI Backend Server on http://localhost:8000..."
-python3 -m backend.app.main &
+# Start FastAPI Backend
+echo "📦 Launching Python Backend on http://localhost:8000..."
+python3 backend/app/main.py &
 BACKEND_PID=$!
 
-# 3. Start Frontend Next.js Server
-echo "🌐 Starting Next.js Frontend Dashboard on http://localhost:3000..."
+# Start Next.js Frontend
+echo "💻 Launching Next.js Frontend on http://localhost:3000..."
 cd frontend
-if [ -d "node_modules" ]; then
-  npm run dev
-else
-  echo "Installing frontend dependencies..."
-  npm install && npm run dev
-fi
+npm install
+npm run dev &
+FRONTEND_PID=$!
 
-# Clean up background backend process on exit
-kill $BACKEND_PID
+echo "--------------------------------------------------------"
+echo "✅ Both servers are starting up!"
+echo "👉 Frontend UI: http://localhost:3000"
+echo "👉 Backend API: http://localhost:8000"
+echo "--------------------------------------------------------"
+
+wait
