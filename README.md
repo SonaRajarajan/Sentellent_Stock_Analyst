@@ -1,7 +1,9 @@
 # Sentellent Equity Chief: Contextual Agentic AI Indian Stock Analyst (RAG)
 
 > **Name:** **V R Sona**
+
 > **Reg No:** **22MIA1161**
+
 > **Sentellent Full Stack AI SDE Internship Challenge Submission**  
 > **Role:** Full Stack AI SDE Intern | **Company:** Sentellent   
 > **GitHub Repository:** [https://github.com/SonaRajarajan/Sentellent_Stock_Analyst](https://github.com/SonaRajarajan/Sentellent_Stock_Analyst) 
