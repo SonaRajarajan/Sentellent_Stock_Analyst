@@ -10,6 +10,25 @@
 
 ---
 
+## Quick Start: Single Terminal Execution
+
+Run **both Frontend and Backend concurrently from a single terminal**:
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/SonaRajarajan/Sentellent_Stock_Analyst.git
+cd Sentellent_Stock_Analyst
+
+# 2. Run both servers from a single terminal command
+./run_app.sh
+```
+
+- **Frontend Application:** [http://localhost:3000](http://localhost:3000)
+- **Backend API Server:** [http://localhost:8000](http://localhost:8000)
+- **Interactive API Documentation:** [http://localhost:8000/docs](http://localhost:8000/docs)
+
+---
+
 ## System Architecture Flowchart
 
 ```mermaid
@@ -126,28 +145,6 @@ flowchart TD
 
 ---
 
-
-
----
-
-## Quick Start: Single Terminal Execution
-
-Run **both Frontend and Backend concurrently from a single terminal**:
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/SonaRajarajan/Sentellent_Stock_Analyst.git
-cd Sentellent_Stock_Analyst
-
-# 2. Run both servers from a single terminal command
-./run_app.sh
-```
-
-- **Frontend Application:** [http://localhost:3000](http://localhost:3000)
-- **Backend API Server:** [http://localhost:8000](http://localhost:8000)
-- **Interactive API Documentation:** [http://localhost:8000/docs](http://localhost:8000/docs)
-
----
 
 ## Evaluator Access & Test Accounts
 
