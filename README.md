@@ -82,7 +82,7 @@ flowchart TD
 
 - Logged-in user profile: **`sonavrajarajan@gmail.com`**.
 - **Total Tracked Holding**: `Rs 12,641,750.00 (+12.4%)` dynamically calculated in **INR (Rs.)**.
-- **⚡ Quick Ingest Select**: One-click company pills (`RELIANCE`, `TCS`, `HDFCBANK`, `INFY`, `TATAMOTORS`, `ITC`, `COALINDIA`) triggering live Screener.in fundamentals + RSS news ingestion into `pgvector`.
+- **Quick Ingest Select**: One-click company pills (`RELIANCE`, `TCS`, `HDFCBANK`, `INFY`, `TATAMOTORS`, `ITC`, `COALINDIA`) triggering live Screener.in fundamentals + RSS news ingestion into `pgvector`.
 
 ---
 
@@ -130,7 +130,7 @@ flowchart TD
 
 ---
 
-## ⚡ Quick Start: Single Terminal Execution
+## Quick Start: Single Terminal Execution
 
 Run **both Frontend and Backend concurrently from a single terminal**:
 
