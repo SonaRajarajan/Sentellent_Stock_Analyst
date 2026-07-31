@@ -11,7 +11,10 @@
 
 ## 📸 Application Screenshots & Key Features
 
-> **Note for Maintenance:** To replace any screenshot image, simply copy-paste a new PNG file with the matching filename into the `docs/images/` folder (`1_login_page.png`, `2_dashboard_page.png`, `3_portfolio.png`, `4_screener_fundamentals_news.png`, `5_rag_chief_assistant.png`).
+> 💡 **How to Paste/Replace Images directly on GitHub:**  
+> When editing `README.md` on GitHub, simply click the **Edit (Pencil) icon on `README.md`** and press **`Cmd + V` / `Ctrl + V`** to paste your screenshot directly into any section below! GitHub will automatically upload it instantly.
+
+---
 
 ### 🔑 1. Login Page
 ![1. Login Page](docs/images/1_login_page.png)
