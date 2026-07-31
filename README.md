@@ -9,50 +9,51 @@
 
 ---
 
-## ⚡ Original HD Cloud Infrastructure & Application Screenshots
+## 📸 Application Screenshots & Key Features
 
-Below are the 100% original full-resolution HD PNG screenshots matching each required topic from the Sentellent challenge specification:
+> **Note for Maintenance:** To replace any screenshot image, simply copy-paste a new PNG file with the matching filename into the `docs/images/` folder (`1_login_page.png`, `2_dashboard_page.png`, `3_portfolio.png`, `4_screener_fundamentals_news.png`, `5_rag_chief_assistant.png`).
 
-### 📊 1. Supabase Production Cloud Infrastructure Console (Project `yhfvgvfbugoajgbxddxx`)
-![Supabase Production Cloud Console](docs/images/supabase_cloud_console.png)
+### 🔑 1. Login Page
+![1. Login Page](docs/images/1_login_page.png)
 
-- **Supabase Cloud Project**: `yhfvgvfbugoajgbxddxx` (`Indian Stock` / `main PRODUCTION`)
-- **Total Requests**: 923 Total Requests (92.6% Success Rate)
-- **Service Breakdown**: API Gateway: 418 requests | Postgres DB: 310 requests | Auth Services: 107 requests | Storage: 59 requests
-- **Vector Store Status**: Active PostgreSQL 15 + `pgvector` embedding storage enabled for RAG retrieval
-
----
-
-### 🔑 2. Authentication & Sign In Portal Screen
-![Authentication Login Portal Screen](docs/images/authentication_login_portal.png)
-
-- Mandatory evaluator test user sign-in options for **`harisankar@sentellent.com`** and **`naga@sentellent.com`**.
-- Fast one-click evaluator sign-in for seamless testing.
+- Secure Authentication Portal on `http://localhost:3000`.
+- Includes mandatory evaluator test user options for **`harisankar@sentellent.com`** and **`naga@sentellent.com`**.
+- One-click fast evaluator sign-in for immediate testing.
 
 ---
 
-### 🔍 3. Dashboard Overview & Live Quick Ingest Select Bar
-![Dashboard Overview Screen](docs/images/dashboard_overview.png)
+### 📊 2. Dashboard Page
+![2. Dashboard Page](docs/images/2_dashboard_page.png)
 
 - Logged-in user profile: **`sonavrajarajan@gmail.com`**.
-- **Total Tracked Holding**: `Rs 12,641,750.00 (+12.4%)` dynamically calculated in INR.
+- **Total Tracked Holding**: `Rs 12,641,750.00 (+12.4%)` dynamically calculated in **INR (Rs.)**.
 - **⚡ Quick Ingest Select**: One-click company pills (`RELIANCE`, `TCS`, `HDFCBANK`, `INFY`, `TATAMOTORS`, `ITC`, `COALINDIA`) triggering live Screener.in fundamentals + RSS news ingestion into `pgvector`.
-- **Top Mini Cards & Watchlist Table**: Real-time fundamentals (P/E ratio, Debt/Equity ceiling, ROCE %) and RAG Chief Assistant drawer.
+- **Top Mini Cards & Watchlist Table**: Real-time fundamentals (P/E ratio, Debt/Equity ceiling, ROCE %) and RAG Chief Assistant summary drawer.
 
 ---
 
-### 📈 4. Tracked Stock Fundamentals & Sentiment Metrics
-![Tracked Stock Fundamentals Table](docs/images/tracked_stock_fundamentals.png)
-
-- Detailed fundamental breakdown table mapping NSE & BSE symbols, prices in **INR (Rs.)**, P/E ratios, and Debt to Equity metrics (`0.42` for RELIANCE, `0.08` for TCS, `0.85` for HDFCBANK, `0.09` for INFY).
-
----
-
-### 💼 5. Tracked Indian Equity Portfolio Manager Screen
-![Tracked Portfolio Manager Screen](docs/images/tracked_portfolio_manager.png)
+### 💼 3. Portfolio
+![3. Portfolio](docs/images/3_portfolio.png)
 
 - Full portfolio view displaying tracked stock cards (`TCS`, `HDFCBANK`, `RELIANCE`, `INFY`, `TATAMOTORS`, `ITC`, `COALINDIA`, `NTPC`).
 - Displays live sentiment badges (`Bullish`), P/E, Debt/Eq, ROCE %, Dividend Yields, and one-click *"View Screener Fundamentals & News"* action buttons.
+
+---
+
+### 🔍 4. Screener Fundamentals & News
+![4. Screener Fundamentals & News](docs/images/4_screener_fundamentals_news.png)
+
+- Detailed fundamental breakdown modal mapping NSE & BSE symbols (e.g. Tata Motors Ltd: Market Cap `Rs 365,200 Cr`, P/E `10.8`, Debt/Equity `0.65`).
+- Ingested Indian financial news feed with sentiment and event tags.
+
+---
+
+### 🤖 5. RAG Chief Assistant
+![5. RAG Chief Assistant](docs/images/5_rag_chief_assistant.png)
+
+- Dedicated Agentic RAG Assistant interface backed by LangGraph state machine.
+- Displays persistent **Learned Investor Persona** graph (`Risk Profile: Moderate`, `Max Debt: 1.5`, `Min Dividend Yield: 0%`).
+- Grounded conversational research with cited source links `[Source 1]` and figures in **INR (Rs.)**.
 
 ---
 
