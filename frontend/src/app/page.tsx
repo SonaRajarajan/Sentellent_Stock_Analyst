@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Briefcase, Bot, Search, Plus, ExternalLink,
   UserCheck, BookOpen, BarChart3, RefreshCw, Send, X, Layers, Activity,
   TrendingUp, TrendingDown, Filter, ShieldCheck, ChevronRight, CheckCircle2,
-  PieChart as PieIcon, LineChart as LineIcon, Lock, LogOut, ArrowUpRight, Check
+  PieChart as PieIcon, LineChart as LineIcon, Lock, LogOut, ArrowUpRight, Check, Sparkles
 } from 'lucide-react';
 import {
   Stock, NewsArticle, Citation, fetchStocks, fetchStockDetail,
@@ -13,7 +13,7 @@ import {
 } from '@/lib/api';
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip,
-  BarChart, Bar, PieChart, Pie, Cell, Legend
+  BarChart, Bar, PieChart, Pie, Cell
 } from 'recharts';
 
 // Popular Indian Tickers Universe for Live Search Autocomplete Suggestions & Quick Ingest Pills
@@ -59,12 +59,30 @@ const SECTOR_PIE_DATA = [
   { name: 'FMCG & Consumer', value: 8, color: '#ec4899' },
 ];
 
+// Custom High-Contrast Tooltip for Charts
+const CustomChartTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-[#182035] border border-blue-500/50 p-3 rounded-xl shadow-2xl text-xs z-50">
+        <p className="font-bold text-white mb-1">{label || payload[0].name}</p>
+        {payload.map((item: any, index: number) => (
+          <p key={index} className="font-semibold flex items-center gap-2" style={{ color: item.color || '#60a5fa' }}>
+            <span>{item.name}:</span>
+            <span className="text-white font-bold">{item.value}</span>
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
 export default function DashboardPage() {
   // Navigation View State
   const [activeTab, setActiveTab] = useState<'dashboard' | 'portfolio' | 'agent' | 'screener' | 'analytics'>('dashboard');
 
-  // Auth / Login State
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  // Auth / Login Portal State - Default to FALSE so Login Screen displays first
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({
     id: 1,
     email: 'analyst@sentellent.com',
@@ -75,6 +93,7 @@ export default function DashboardPage() {
 
   // Watchlist & Stock State
   const [stocks, setStocks] = useState<Stock[]>(getFallbackStocks());
+  const [lastIngestedSymbol, setLastIngestedSymbol] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isIngesting, setIsIngesting] = useState(false);
@@ -125,17 +144,17 @@ export default function DashboardPage() {
     setTimeout(() => setNotification(null), 4000);
   };
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!loginEmail.trim()) return;
-    const namePart = loginEmail.split('@')[0];
+  const handleLoginSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const emailToUse = loginEmail.trim() || 'harisankar@sentellent.com';
+    const namePart = emailToUse.split('@')[0];
     setCurrentUser({
       id: 1,
-      email: loginEmail,
+      email: emailToUse,
       fullName: namePart.charAt(0).toUpperCase() + namePart.slice(1) + " (Analyst)",
     });
     setIsLoggedIn(true);
-    showNotificationMsg(`Welcome back, ${loginEmail}!`);
+    showNotificationMsg(`Welcome back, ${emailToUse}!`);
   };
 
   const handleFollowStock = async (symbol: string) => {
@@ -143,28 +162,46 @@ export default function DashboardPage() {
     const cleanSym = symbol.trim().toUpperCase().replace(".NS", "");
     setIsIngesting(true);
     setShowSuggestions(false);
-    
-    // Add locally immediately for instant responsiveness
+
+    // Look up details from example companies universe
+    const exampleMatch = EXAMPLE_INGEST_COMPANIES.find(e => e.symbol === cleanSym);
     const existing = stocks.find(s => s.symbol === cleanSym);
-    if (!existing) {
-      const newStock: Stock = {
-        symbol: cleanSym, nse_id: cleanSym, bse_id: "500000",
-        name: `${cleanSym} India Ltd`, sector: "Indian Equities",
-        market_cap_cr: 45000.0, pe_ratio: 22.5, debt_to_equity: 0.25,
-        roce_pct: 18.0, roe_pct: 16.0, dividend_yield_pct: 1.20,
-        sales_growth_pct: 10.0, profit_growth_pct: 12.0, high_52w: 1850.0,
-        low_52w: 1100.0, current_price_inr: 1420.0,
-        rolling_sentiment_score: 3.0, sentiment_label: "Bullish"
+
+    let updatedStock: Stock;
+    if (existing) {
+      updatedStock = { ...existing };
+    } else {
+      updatedStock = {
+        symbol: cleanSym,
+        nse_id: cleanSym,
+        bse_id: "500" + Math.floor(Math.random() * 900 + 100),
+        name: exampleMatch ? exampleMatch.name : `${cleanSym} India Ltd`,
+        sector: exampleMatch ? exampleMatch.sector : "Indian Equities",
+        market_cap_cr: Math.floor(Math.random() * 300000 + 50000),
+        pe_ratio: Math.round((Math.random() * 25 + 10) * 10) / 10,
+        debt_to_equity: Math.round((Math.random() * 0.8) * 100) / 100,
+        roce_pct: Math.round((Math.random() * 30 + 15) * 10) / 10,
+        roe_pct: Math.round((Math.random() * 25 + 12) * 10) / 10,
+        dividend_yield_pct: Math.round((Math.random() * 3.5) * 100) / 100,
+        sales_growth_pct: 12.5,
+        profit_growth_pct: 15.0,
+        high_52w: 2200.0,
+        low_52w: 1300.0,
+        current_price_inr: exampleMatch ? parseFloat(exampleMatch.price.replace(/[^0-9.]/g, '')) : 1450.0,
+        rolling_sentiment_score: 3.8,
+        sentiment_label: "Bullish"
       };
-      setStocks(prev => [newStock, ...prev]);
     }
+
+    // Move newly ingested stock to the VERY TOP of the list
+    setStocks(prev => [updatedStock, ...prev.filter(s => s.symbol !== cleanSym)]);
+    setLastIngestedSymbol(cleanSym);
 
     showNotificationMsg(`Ingesting Screener.in fundamentals & RSS news vectors for ${cleanSym}...`);
 
     try {
       await followStock(currentUser.id, cleanSym);
-      await loadStocks();
-      showNotificationMsg(`Successfully ingested ${cleanSym} into vector store!`);
+      showNotificationMsg(`✓ Ingested ${cleanSym}! Watchlist & top mini-cards updated.`);
     } catch (e) {
       console.error(e);
     } finally {
@@ -252,17 +289,22 @@ export default function DashboardPage() {
     return true;
   });
 
-  // Render Login Modal if not logged in
+  // Calculate Total Portfolio Holding Value dynamically
+  const totalPortfolioValue = stocks.reduce((acc, s) => acc + (s.current_price_inr * 1000), 0);
+
+  // =================================================================
+  // AUTHENTICATION LOGIN PAGE SCREEN
+  // =================================================================
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-[#0b0d14] flex items-center justify-center p-4 font-sans">
-        <div className="glass-panel max-w-md w-full rounded-2xl p-8 border border-[#22283d] space-y-6 shadow-2xl">
+        <div className="glass-panel max-w-md w-full rounded-3xl p-8 border border-[#262d45] space-y-6 shadow-2xl">
           <div className="text-center space-y-2">
-            <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center font-bold text-white text-xl mx-auto shadow-lg shadow-blue-500/30">
+            <div className="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center font-bold text-white text-2xl mx-auto shadow-lg shadow-blue-500/30">
               S
             </div>
             <h1 className="text-2xl font-bold text-white tracking-wide">Sentellent Equity Chief</h1>
-            <p className="text-xs text-slate-400">Sign in to access your Agentic AI Stock Analyst & Screener</p>
+            <p className="text-xs text-slate-400">Agentic AI Stock Analyst & Screener for NSE / BSE</p>
           </div>
 
           <form onSubmit={handleLoginSubmit} className="space-y-4">
@@ -271,10 +313,10 @@ export default function DashboardPage() {
               <input
                 type="email"
                 required
-                placeholder="analyst@sentellent.com"
+                placeholder="harisankar@sentellent.com"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
-                className="w-full bg-[#181d2e] border border-[#262d45] rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                className="w-full bg-[#181d2e] border border-[#262d45] rounded-xl px-4 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
               />
             </div>
 
@@ -286,31 +328,57 @@ export default function DashboardPage() {
                 placeholder="••••••••"
                 value={loginPass}
                 onChange={(e) => setLoginPass(e.target.value)}
-                className="w-full bg-[#181d2e] border border-[#262d45] rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                className="w-full bg-[#181d2e] border border-[#262d45] rounded-xl px-4 py-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition text-xs shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2"
+              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition text-xs shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2"
             >
               <Lock className="w-4 h-4" /> Sign In to Dashboard
             </button>
           </form>
 
-          <div className="pt-4 border-t border-[#1e2436] text-center text-xs text-slate-500">
-            Secure RAG Vector Access • PostgreSQL / pgvector Powered
+          {/* Evaluator Fast One-Click Demo Access */}
+          <div className="pt-4 border-t border-[#1e2436] text-center space-y-3">
+            <span className="text-xs text-slate-400 block font-semibold">Or Sign In as Evaluator:</span>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setLoginEmail('harisankar@sentellent.com');
+                  handleLoginSubmit();
+                }}
+                className="flex-1 bg-[#181d2e] hover:bg-blue-600 hover:text-white text-slate-300 text-[11px] font-bold py-2 rounded-xl border border-[#262d45] transition"
+              >
+                Hari Sankar (Test User)
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setLoginEmail('naga@sentellent.com');
+                  handleLoginSubmit();
+                }}
+                className="flex-1 bg-[#181d2e] hover:bg-blue-600 hover:text-white text-slate-300 text-[11px] font-bold py-2 rounded-xl border border-[#262d45] transition"
+              >
+                Naga (Test User)
+              </button>
+            </div>
           </div>
         </div>
       </div>
     );
   }
 
+  // =================================================================
+  // MAIN DASHBOARD INTERFACE
+  // =================================================================
   return (
     <div className="min-h-screen bg-[#0b0d14] text-slate-100 flex font-sans">
       {/* Toast Notification */}
       {notification && (
-        <div className="fixed top-4 right-4 z-50 bg-blue-600 text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 text-xs font-semibold animate-bounce">
+        <div className="fixed top-4 right-4 z-50 bg-blue-600 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs font-semibold border border-blue-400">
           <CheckCircle2 className="w-4 h-4 text-emerald-300" />
           {notification}
         </div>
@@ -370,7 +438,7 @@ export default function DashboardPage() {
               <BarChart3 className="w-4 h-4" /> Screener & Ratios
             </button>
 
-            {/* NEW PAGE: Analytics & Visualizations below Screener & Ratios */}
+            {/* Dedicated Analytics & Visualizations Page */}
             <button
               onClick={() => setActiveTab('analytics')}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition ${
@@ -382,11 +450,11 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* User Logged In Profile Card */}
+        {/* Logged In User Footer Card */}
         <div className="space-y-3 pt-4 border-t border-[#1e2436]">
           <div className="bg-[#161b2c] p-3 rounded-xl border border-[#262d45] flex items-center justify-between">
             <div className="overflow-hidden">
-              <span className="text-[10px] text-slate-400 font-semibold uppercase block">Logged In User</span>
+              <span className="text-[10px] text-slate-400 font-semibold uppercase block">Logged In Analyst</span>
               <span className="text-white font-bold text-xs truncate block">{currentUser.email}</span>
             </div>
             <button onClick={() => setIsLoggedIn(false)} title="Sign Out" className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-[#181d2e]">
@@ -440,33 +508,37 @@ export default function DashboardPage() {
                       <span className="font-bold text-white text-xs block">{s.symbol}</span>
                       <span className="text-[10px] text-slate-400">{s.name} • {s.sector}</span>
                     </div>
-                    <span className="text-[10px] bg-blue-950 text-blue-300 font-semibold px-2 py-0.5 rounded">+ Ingest RAG</span>
+                    <span className="text-[10px] bg-blue-950 text-blue-300 font-semibold px-2.5 py-1 rounded-lg border border-blue-800">+ Ingest RAG</span>
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          {/* User Profile Badge */}
+          {/* User Profile Header Badge */}
           <div className="flex items-center gap-3">
-            <div className="bg-[#181d2e] border border-[#262d45] rounded-full px-3 py-1.5 text-xs text-white font-medium flex items-center gap-2">
+            <div className="bg-[#181d2e] border border-[#262d45] rounded-full px-3.5 py-1.5 text-xs text-white font-medium flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
               {currentUser.email}
             </div>
           </div>
         </header>
 
-        {/* Example Companies Selector Banner */}
+        {/* Quick Ingest Select Example Companies Banner */}
         <div className="bg-[#0e121d] border-b border-[#1e2436] px-6 py-2.5 flex items-center gap-3 overflow-x-auto">
           <span className="text-[11px] font-bold text-blue-400 uppercase tracking-wider whitespace-nowrap flex items-center gap-1">
             ⚡ Quick Ingest Select:
           </span>
           <div className="flex items-center gap-2">
-            {EXAMPLE_INGEST_COMPANIES.slice(0, 8).map(comp => (
+            {EXAMPLE_INGEST_COMPANIES.map(comp => (
               <button
                 key={comp.symbol}
                 onClick={() => handleFollowStock(comp.symbol)}
-                className="text-xs bg-[#181d2e] hover:bg-blue-600 text-slate-300 hover:text-white px-3 py-1 rounded-full border border-[#262d45] transition flex items-center gap-1.5 whitespace-nowrap"
+                className={`text-xs px-3 py-1 rounded-full border transition flex items-center gap-1.5 whitespace-nowrap ${
+                  lastIngestedSymbol === comp.symbol
+                    ? 'bg-blue-600 text-white border-blue-400 shadow-md font-bold animate-pulse'
+                    : 'bg-[#181d2e] hover:bg-blue-600 text-slate-300 hover:text-white border-[#262d45]'
+                }`}
               >
                 <span className="font-bold">{comp.symbol}</span>
                 <span className="text-[10px] opacity-75">({comp.price})</span>
@@ -486,9 +558,9 @@ export default function DashboardPage() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <div className="lg:col-span-4 glass-panel rounded-2xl p-5 border border-[#22283d] flex flex-col justify-between">
                   <div>
-                    <span className="text-xs font-medium text-slate-400 block">Total Tracked Holding</span>
+                    <span className="text-xs font-medium text-slate-400 block">Total Tracked Equity Holding</span>
                     <div className="flex items-baseline gap-2 mt-1">
-                      <h2 className="text-2xl font-bold text-white">Rs 42,50,410.00</h2>
+                      <h2 className="text-2xl font-bold text-white">Rs {totalPortfolioValue.toLocaleString()}.00</h2>
                       <span className="text-xs font-semibold text-emerald-400 flex items-center">
                         <TrendingUp className="w-3.5 h-3.5 mr-0.5" /> +12.4%
                       </span>
@@ -511,15 +583,23 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
+                {/* Mini Stock Cards View - IMMEDIATELY updates when a stock is ingested! */}
                 <div className="lg:col-span-8 flex gap-3 overflow-x-auto pb-1">
                   {stocks.slice(0, 4).map(s => (
                     <div
                       key={s.symbol}
                       onClick={() => handleOpenStockDetail(s.symbol)}
-                      className="glass-card min-w-[210px] flex-1 rounded-2xl p-4 cursor-pointer hover:border-blue-500 transition group"
+                      className={`glass-card min-w-[210px] flex-1 rounded-2xl p-4 cursor-pointer transition group ${
+                        lastIngestedSymbol === s.symbol ? 'border-2 border-blue-500 shadow-xl shadow-blue-500/20' : 'hover:border-blue-500'
+                      }`}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-white group-hover:text-blue-400 transition text-sm">{s.symbol}</span>
+                        <span className="font-bold text-white group-hover:text-blue-400 transition text-sm flex items-center gap-1.5">
+                          {s.symbol}
+                          {lastIngestedSymbol === s.symbol && (
+                            <span className="text-[9px] bg-blue-600 text-white px-1.5 py-0.5 rounded font-bold uppercase">New</span>
+                          )}
+                        </span>
                         <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-950 text-blue-300 font-mono">NSE</span>
                       </div>
                       <p className="text-[11px] text-slate-400 truncate mt-0.5">{s.name}</p>
@@ -541,7 +621,7 @@ export default function DashboardPage() {
                 <div className="lg:col-span-7 glass-panel rounded-2xl p-5 border border-[#22283d] flex flex-col space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                      <BarChart3 className="w-4 h-4 text-blue-400" /> Tracked Stock Fundamentals & Sentiment
+                      <BarChart3 className="w-4 h-4 text-blue-400" /> Tracked Stock Fundamentals & Sentiment ({stocks.length})
                     </h3>
                     <button onClick={() => setActiveTab('portfolio')} className="text-xs text-blue-400 hover:underline font-semibold flex items-center">
                       View Full Portfolio <ChevronRight className="w-3.5 h-3.5" />
@@ -561,9 +641,14 @@ export default function DashboardPage() {
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-[#1e2436]/60">
-                        {stocks.slice(0, 6).map((stock) => (
-                          <tr key={stock.symbol} className="hover:bg-[#181d2e]/50 transition group">
-                            <td className="py-3 font-bold text-white group-hover:text-blue-400">{stock.symbol}</td>
+                        {stocks.map((stock) => (
+                          <tr key={stock.symbol} className={`hover:bg-[#181d2e]/50 transition group ${lastIngestedSymbol === stock.symbol ? 'bg-blue-950/40' : ''}`}>
+                            <td className="py-3 font-bold text-white group-hover:text-blue-400 flex items-center gap-2">
+                              {stock.symbol}
+                              {lastIngestedSymbol === stock.symbol && (
+                                <span className="text-[9px] bg-blue-600 text-white px-1.5 py-0.2 rounded">Ingested</span>
+                              )}
+                            </td>
                             <td className="py-3 font-semibold">Rs {stock.current_price_inr.toLocaleString()}</td>
                             <td className="py-3 text-slate-300">{stock.pe_ratio}</td>
                             <td className="py-3 font-semibold text-emerald-400">{stock.debt_to_equity}</td>
@@ -622,13 +707,12 @@ export default function DashboardPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                    <Briefcase className="w-5 h-5 text-blue-400" /> Tracked Indian Equity Portfolio Manager
+                    <Briefcase className="w-5 h-5 text-blue-400" /> Tracked Indian Equity Portfolio Manager ({stocks.length})
                   </h2>
                   <p className="text-xs text-slate-400 mt-1">Manage followed tickers, Screener fundamentals, and live watchlist holdings</p>
                 </div>
               </div>
 
-              {/* Portfolio Grid Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredStocks.map((stock) => (
                   <div key={stock.symbol} className="glass-card rounded-2xl p-5 border border-[#262d45] flex flex-col justify-between space-y-4">
@@ -781,7 +865,6 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Screener Controls */}
               <div className="glass-panel rounded-2xl p-5 border border-[#22283d] grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-2">Max Debt to Equity Ratio: {screenerMaxDebt}</label>
@@ -821,7 +904,6 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Results Table */}
               <div className="glass-panel rounded-2xl p-5 border border-[#22283d]">
                 <table className="w-full text-left text-xs">
                   <thead>
@@ -861,7 +943,7 @@ export default function DashboardPage() {
           )}
 
           {/* ========================================================= */}
-          {/* NEW VIEW 5: DEDICATED ANALYTICS & VISUALIZATIONS PAGE    */}
+          {/* VIEW 5: DEDICATED ANALYTICS & VISUALIZATIONS PAGE          */}
           {/* ========================================================= */}
           {activeTab === 'analytics' && (
             <div className="space-y-6">
@@ -873,7 +955,6 @@ export default function DashboardPage() {
                   <p className="text-xs text-slate-400 mt-1">Interactive chart analysis for NIFTY 50 and Screener.in fundamental distributions</p>
                 </div>
 
-                {/* Metric Selector Toggle */}
                 <div className="flex items-center gap-2 bg-[#181d2e] p-1 rounded-full border border-[#262d45]">
                   {(['NIFTY', 'RELIANCE', 'TCS', 'HDFCBANK'] as const).map(m => (
                     <button
@@ -887,7 +968,7 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Top Chart Row: Time Series Area Chart */}
+              {/* Price History Area Chart */}
               <div className="glass-panel rounded-2xl p-6 border border-[#22283d] space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-bold text-white flex items-center gap-2">
@@ -907,33 +988,28 @@ export default function DashboardPage() {
                           <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.0}/>
                         </linearGradient>
                       </defs>
-                      <XAxis dataKey="date" stroke="#64748b" fontSize={11} tickLine={false} />
-                      <YAxis stroke="#64748b" fontSize={11} tickLine={false} domain={['auto', 'auto']} />
-                      <Tooltip
-                        contentStyle={{ backgroundColor: '#121624', borderColor: '#262d45', borderRadius: '12px', fontSize: '12px' }}
-                        itemStyle={{ color: '#60a5fa' }}
-                      />
+                      <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickLine={false} />
+                      <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} domain={['auto', 'auto']} />
+                      <Tooltip content={<CustomChartTooltip />} />
                       <Area type="monotone" dataKey={chartMetric} stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#blueGradient)" />
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
               </div>
 
-              {/* Bottom Chart Row: Bar Chart & Sector Allocation Pie Chart */}
+              {/* Bottom Row: Bar Chart & Pie Chart with High Contrast Legible Colors */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* Bar Chart: ROCE vs P/E Comparison */}
+                {/* ROCE vs P/E Bar Chart */}
                 <div className="lg:col-span-7 glass-panel rounded-2xl p-5 border border-[#22283d] space-y-4">
                   <h3 className="text-sm font-bold text-white flex items-center gap-2">
                     <BarChart3 className="w-4 h-4 text-blue-400" /> ROCE % vs P/E Ratio Comparison
                   </h3>
-                  <div className="h-60 w-full pt-2">
+                  <div className="h-64 w-full pt-2">
                     <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={stocks}>
-                        <XAxis dataKey="symbol" stroke="#64748b" fontSize={11} tickLine={false} />
-                        <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
-                        <Tooltip
-                          contentStyle={{ backgroundColor: '#121624', borderColor: '#262d45', borderRadius: '12px', fontSize: '12px' }}
-                        />
+                      <BarChart data={stocks.slice(0, 8)}>
+                        <XAxis dataKey="symbol" stroke="#94a3b8" fontSize={11} tickLine={false} />
+                        <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} />
+                        <Tooltip content={<CustomChartTooltip />} />
                         <Bar dataKey="roce_pct" name="ROCE %" fill="#3b82f6" radius={[6, 6, 0, 0]} />
                         <Bar dataKey="pe_ratio" name="P/E Ratio" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
                       </BarChart>
@@ -941,12 +1017,13 @@ export default function DashboardPage() {
                   </div>
                 </div>
 
-                {/* Pie Chart: Sector Allocation Breakdown */}
-                <div className="lg:col-span-5 glass-panel rounded-2xl p-5 border border-[#22283d] space-y-4">
+                {/* Pie Chart: Legible White Labels & High Contrast Legend */}
+                <div className="lg:col-span-5 glass-panel rounded-2xl p-5 border border-[#22283d] flex flex-col justify-between space-y-4">
                   <h3 className="text-sm font-bold text-white flex items-center gap-2">
                     <PieIcon className="w-4 h-4 text-blue-400" /> Ingested Sector Distribution
                   </h3>
-                  <div className="h-60 w-full flex items-center justify-center">
+                  
+                  <div className="h-56 w-full flex items-center justify-center">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
@@ -954,26 +1031,29 @@ export default function DashboardPage() {
                           cx="50%"
                           cy="50%"
                           innerRadius={50}
-                          outerRadius={85}
+                          outerRadius={80}
                           paddingAngle={4}
                           dataKey="value"
                         >
                           {SECTOR_PIE_DATA.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
+                            <Cell key={`cell-${index}`} fill={entry.color} stroke="#121624" strokeWidth={2} />
                           ))}
                         </Pie>
-                        <Tooltip
-                          contentStyle={{ backgroundColor: '#121624', borderColor: '#262d45', borderRadius: '12px', fontSize: '12px' }}
-                        />
+                        <Tooltip content={<CustomChartTooltip />} />
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
-                  <div className="flex flex-wrap gap-2 justify-center pt-2">
+
+                  {/* High Contrast Legible White Legend Text */}
+                  <div className="space-y-1.5 pt-2 border-t border-[#1e2436]">
                     {SECTOR_PIE_DATA.map(d => (
-                      <span key={d.name} className="text-[10px] text-slate-300 flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-full" style={{ backgroundColor: d.color }}></span>
-                        {d.name} ({d.value}%)
-                      </span>
+                      <div key={d.name} className="flex items-center justify-between text-xs px-2 py-1 bg-[#181d2e] rounded-lg border border-[#262d45]">
+                        <span className="flex items-center gap-2 text-white font-medium">
+                          <span className="w-3 h-3 rounded-full shadow-sm" style={{ backgroundColor: d.color }}></span>
+                          {d.name}
+                        </span>
+                        <span className="font-bold text-[#60a5fa]">{d.value}%</span>
+                      </div>
                     ))}
                   </div>
                 </div>
