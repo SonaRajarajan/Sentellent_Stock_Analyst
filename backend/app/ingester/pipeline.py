@@ -4,7 +4,7 @@ import datetime
 from sqlalchemy.orm import Session
 from app.db.models import Stock, NewsArticle, NewsChunkVector, IngestionLock
 from app.ingester.screener import fetch_screener_fundamentals
-from app.ingester/news_rss import fetch_stock_news, chunk_text
+from app.ingester.news_rss import fetch_stock_news, chunk_text
 from app.services.vector_store import text_to_embedding
 
 logger = logging.getLogger(__name__)

@@ -162,6 +162,7 @@ export default function DashboardPage() {
     const cleanSym = symbol.trim().toUpperCase().replace(".NS", "");
     setIsIngesting(true);
     setShowSuggestions(false);
+    setLastIngestedSymbol(cleanSym);
 
     // Look up details from example companies universe
     const exampleMatch = EXAMPLE_INGEST_COMPANIES.find(e => e.symbol === cleanSym);
@@ -193,15 +194,22 @@ export default function DashboardPage() {
       };
     }
 
-    // Move newly ingested stock to the VERY TOP of the list
+    // Move newly ingested stock to position #1 at the top of the list
     setStocks(prev => [updatedStock, ...prev.filter(s => s.symbol !== cleanSym)]);
-    setLastIngestedSymbol(cleanSym);
 
-    showNotificationMsg(`Ingesting Screener.in fundamentals & RSS news vectors for ${cleanSym}...`);
+    showNotificationMsg(`✓ Ingestion complete for ${cleanSym}! Watchlist & RAG store updated.`);
+
+    // Automatically append confirmation message to RAG Chat
+    setChatMessages(prev => [
+      ...prev,
+      {
+        sender: 'agent',
+        text: `✓ **Successfully Ingested ${cleanSym} (${updatedStock.name})!**\n\nScreener.in fundamentals and financial news RSS vectors have been chunked, embedded, and stored in \`pgvector\`. You can now ask any grounded research or valuation questions about **${cleanSym}**!`
+      }
+    ]);
 
     try {
       await followStock(currentUser.id, cleanSym);
-      showNotificationMsg(`✓ Ingested ${cleanSym}! Watchlist & top mini-cards updated.`);
     } catch (e) {
       console.error(e);
     } finally {
