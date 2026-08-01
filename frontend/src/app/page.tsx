@@ -65,8 +65,8 @@ const CustomChartTooltip = ({ active, payload, label, theme }: any) => {
   if (active && payload && payload.length) {
     const isPixel = theme === 'pixel';
     return (
-      <div className={`${isPixel ? 'bg-[#181b26] border-4 border-black shadow-[3px_3px_0px_0px_#000] font-pixel-body' : 'bg-[#182035] border border-blue-500/50 rounded-xl shadow-2xl'} p-3 text-xs z-50`}>
-        <p className={`font-bold text-white mb-1 ${isPixel ? 'text-[11px] text-green-400' : ''}`}>{label || payload[0].name}</p>
+      <div className={isPixel ? "bg-[#181b26] border-4 border-black p-3 text-xs font-pixel-body shadow-md z-50" : "bg-[#182035] border border-blue-500/50 p-3 rounded-xl shadow-2xl text-xs z-50"}>
+        <p className={isPixel ? "font-bold text-green-400 mb-1 text-[11px]" : "font-bold text-white mb-1"}>{label || payload[0].name}</p>
         {payload.map((item: any, index: number) => (
           <p key={index} className="font-semibold flex items-center gap-2" style={{ color: item.color || '#60a5fa' }}>
             <span>{item.name}:</span>
@@ -81,12 +81,12 @@ const CustomChartTooltip = ({ active, payload, label, theme }: any) => {
 
 // Retro 8-Bit Pixel Art Stock Growth Chart & Golden Coin Graphic (Matching User Reference Image)
 const PixelStockBoardGraphic = () => (
-  <svg viewBox="0 0 200 220" className="w-28 h-28 mx-auto drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]">
-    {/* Tripod Stand Top Anchor */}
+  <svg viewBox="0 0 200 220" className="w-28 h-28 mx-auto drop-shadow-md">
+    {/* Stand Anchor Top */}
     <rect x="94" y="4" width="12" height="12" fill="#334155" stroke="#000" strokeWidth="3" />
     <polygon points="100,16 60,32 140,32" fill="#475569" stroke="#000" strokeWidth="3" />
     
-    {/* Whiteboard Background */}
+    {/* Whiteboard Frame */}
     <rect x="20" y="32" width="160" height="130" fill="#e2e8f0" stroke="#000" strokeWidth="4" />
     
     {/* Grid Lines */}
@@ -98,11 +98,11 @@ const PixelStockBoardGraphic = () => (
     <line x1="20" y1="98" x2="180" y2="98" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="4 4" />
     <line x1="20" y1="130" x2="180" y2="130" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="4 4" />
 
-    {/* Y Axis Pixel Arrow */}
+    {/* Y Axis Arrow */}
     <line x1="36" y1="152" x2="36" y2="48" stroke="#1e293b" strokeWidth="6" />
     <polygon points="36,40 26,56 46,56" fill="#1e293b" stroke="#000" strokeWidth="2" />
     
-    {/* X Axis Pixel Arrow */}
+    {/* X Axis Arrow */}
     <line x1="36" y1="152" x2="168" y2="152" stroke="#1e293b" strokeWidth="6" />
     <polygon points="176,152 160,142 160,162" fill="#1e293b" stroke="#000" strokeWidth="2" />
 
@@ -110,10 +110,10 @@ const PixelStockBoardGraphic = () => (
     <path d="M 50 135 L 75 115 L 95 122 L 120 95 L 140 102 L 165 65" fill="none" stroke="#22c55e" strokeWidth="8" strokeLinejoin="miter" />
     <polygon points="172,58 152,60 162,78" fill="#22c55e" stroke="#000" strokeWidth="2" />
 
-    {/* Golden Coin (Bitcoin / Equity Coin) */}
+    {/* Golden Equity Coin */}
     <circle cx="56" cy="136" r="22" fill="#f59e0b" stroke="#000" strokeWidth="4" />
     <circle cx="56" cy="136" r="17" fill="#fbbf24" stroke="#000" strokeWidth="2" />
-    <text x="56" y="142" fontSize="18" fontWeight="bold" fontFamily="monospace" textAnchor="middle" fill="#78350f">₹</text>
+    <text x="56" y="143" fontSize="18" fontWeight="bold" fontFamily="monospace" textAnchor="middle" fill="#78350f">₹</text>
 
     {/* Stand Tripod Legs */}
     <rect x="94" y="162" width="12" height="30" fill="#334155" stroke="#000" strokeWidth="3" />
@@ -160,7 +160,6 @@ export default function DashboardPage() {
 
   // Modals & Drawers
   const [selectedStock, setSelectedStock] = useState<{ stock: Stock; news: NewsArticle[] } | null>(null);
-  const [activeCitation, setActiveCitation] = useState<Citation | null>(null);
 
   // Agent Chat State
   const [chatMessages, setChatMessages] = useState<Array<{ sender: 'user' | 'agent'; text: string; citations?: Citation[] }>>([
@@ -204,7 +203,7 @@ export default function DashboardPage() {
       fullName: namePart.charAt(0).toUpperCase() + namePart.slice(1) + " (Analyst)",
     });
     setIsLoggedIn(true);
-    setHasSelectedTheme(false); // Prompt theme selection next!
+    setHasSelectedTheme(false); // Prompt theme selection screen next!
   };
 
   const handleSelectTheme = (theme: 'obsidian' | 'pixel') => {
@@ -535,32 +534,40 @@ export default function DashboardPage() {
     );
   }
 
+  // Helper Theme Classes
+  const mainBgClass = isPixel ? 'min-h-screen bg-[#0f111a] font-pixel-body text-slate-100 flex' : 'min-h-screen bg-[#0b0d14] font-sans text-slate-100 flex';
+  const sidebarClass = isPixel ? 'w-64 bg-[#161926] border-r-4 border-black shadow-[4px_0px_0px_0px_#000] flex flex-col justify-between p-5 hidden md:flex' : 'w-64 bg-[#10131e] border-r border-[#1e2436] flex flex-col justify-between p-5 hidden md:flex';
+  const headerClass = isPixel ? 'h-16 bg-[#161926] border-b-4 border-black shadow-[0px_4px_0px_0px_#000] px-6 flex items-center justify-between sticky top-0 z-40' : 'h-16 border-b border-[#1e2436] bg-[#10131e]/90 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-40';
+  const quickBannerClass = isPixel ? 'bg-[#181b26] border-b-4 border-black px-6 py-2.5 flex items-center gap-3 overflow-x-auto' : 'bg-[#0e121d] border-b border-[#1e2436] px-6 py-2.5 flex items-center gap-3 overflow-x-auto';
+  const panelClass = isPixel ? 'pixel-panel p-5 space-y-4' : 'glass-panel rounded-2xl p-5 border border-[#22283d] space-y-4';
+  const cardClass = isPixel ? 'pixel-card p-5 space-y-4' : 'glass-card rounded-2xl p-5 border border-[#262d45] space-y-4';
+
   // =================================================================
   // STEP 3: MAIN DASHBOARD INTERFACE (Dynamic Theme Render)
   // =================================================================
   return (
-    <div className={`min-h-screen ${isPixel ? 'bg-[#0f111a] font-pixel-body' : 'bg-[#0b0d14] font-sans'} text-slate-100 flex`}>
+    <div className={mainBgClass}>
       {/* Toast Notification */}
       {notification && (
-        <div className={`fixed top-4 right-4 z-50 ${isPixel ? 'bg-emerald-500 text-black border-4 border-black shadow-[4px_4px_0px_0px_#000] font-pixel-body' : 'bg-blue-600 text-white border border-blue-400 shadow-2xl rounded-2xl'} px-5 py-3 flex items-center gap-2.5 text-xs font-semibold`}>
+        <div className={isPixel ? 'fixed top-4 right-4 z-50 bg-emerald-500 text-black border-4 border-black shadow-[4px_4px_0px_0px_#000] font-pixel-body px-5 py-3 flex items-center gap-2.5 text-xs font-semibold' : 'fixed top-4 right-4 z-50 bg-blue-600 text-white border border-blue-400 shadow-2xl rounded-2xl px-5 py-3 flex items-center gap-2.5 text-xs font-semibold'}>
           <CheckCircle2 className="w-4 h-4" />
           {notification}
         </div>
       )}
 
       {/* Sidebar Navigation */}
-      <aside className={`w-64 ${isPixel ? 'bg-[#161926] border-r-4 border-black shadow-[4px_0px_0px_0px_#000]' : 'bg-[#10131e] border-r border-[#1e2436]'} flex flex-col justify-between p-5 hidden md:flex`}>
+      <aside className={sidebarClass}>
         <div className="space-y-6">
           {/* Brand Logo */}
           <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 ${isPixel ? 'bg-emerald-500 border-3 border-black text-black font-pixel-heading shadow-[3px_3px_0px_0px_#000]' : 'rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-500/30'} flex items-center justify-center font-bold text-lg`}>
+            <div className={isPixel ? 'w-10 h-10 bg-emerald-500 border-3 border-black text-black font-pixel-heading shadow-[3px_3px_0px_0px_#000] flex items-center justify-center font-bold text-lg' : 'w-10 h-10 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-500/30 flex items-center justify-center font-bold text-lg'}>
               {isPixel ? '🪙' : 'S'}
             </div>
             <div>
-              <span className={`font-bold text-white ${isPixel ? 'font-pixel-heading text-xs tracking-wider' : 'text-base tracking-wide'} block`}>
+              <span className={isPixel ? 'font-bold text-white font-pixel-heading text-xs tracking-wider block' : 'font-bold text-white text-base tracking-wide block'}>
                 {isPixel ? 'EQUITY 8-BIT' : 'Sentellent'}
               </span>
-              <span className={`text-[10px] ${isPixel ? 'text-amber-400 font-bold' : 'text-blue-400 font-semibold'} uppercase tracking-wider`}>
+              <span className={isPixel ? 'text-[10px] text-amber-400 font-bold uppercase tracking-wider block' : 'text-[10px] text-blue-400 font-semibold uppercase tracking-wider block'}>
                 {isPixel ? 'ARCADE RAG CHIEF' : 'Equity Chief RAG'}
               </span>
             </div>
@@ -568,61 +575,41 @@ export default function DashboardPage() {
 
           {/* Main Menu Tabs */}
           <div className="space-y-1.5">
-            <span className={`text-[10px] font-bold ${isPixel ? 'text-emerald-400 font-pixel-heading' : 'text-slate-500'} uppercase tracking-wider px-3 block mb-2`}>
+            <span className={isPixel ? 'text-[10px] font-bold text-emerald-400 font-pixel-heading uppercase tracking-wider px-3 block mb-2' : 'text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 block mb-2'}>
               Main Menu
             </span>
             
             <button
               onClick={() => setActiveTab('dashboard')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 ${isPixel ? 'rounded-lg' : 'rounded-xl'} text-xs font-semibold transition ${
-                activeTab === 'dashboard'
-                  ? (isPixel ? 'pixel-pill-active' : 'pill-active')
-                  : (isPixel ? 'text-slate-300 hover:bg-[#202433]' : 'text-slate-400 hover:bg-[#181d2e] hover:text-white')
-              }`}
+              className={activeTab === 'dashboard' ? (isPixel ? 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold transition pixel-pill-active' : 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition pill-active') : (isPixel ? 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold transition text-slate-300 hover:bg-[#202433]' : 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-400 hover:bg-[#181d2e] hover:text-white')}
             >
               <LayoutDashboard className="w-4 h-4" /> Dashboard Overview
             </button>
 
             <button
               onClick={() => setActiveTab('portfolio')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 ${isPixel ? 'rounded-lg' : 'rounded-xl'} text-xs font-semibold transition ${
-                activeTab === 'portfolio'
-                  ? (isPixel ? 'pixel-pill-active' : 'pill-active')
-                  : (isPixel ? 'text-slate-300 hover:bg-[#202433]' : 'text-slate-400 hover:bg-[#181d2e] hover:text-white')
-              }`}
+              className={activeTab === 'portfolio' ? (isPixel ? 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold transition pixel-pill-active' : 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition pill-active') : (isPixel ? 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold transition text-slate-300 hover:bg-[#202433]' : 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-400 hover:bg-[#181d2e] hover:text-white')}
             >
               <Briefcase className="w-4 h-4" /> Tracked Portfolio
             </button>
 
             <button
               onClick={() => setActiveTab('agent')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 ${isPixel ? 'rounded-lg' : 'rounded-xl'} text-xs font-semibold transition ${
-                activeTab === 'agent'
-                  ? (isPixel ? 'pixel-pill-active' : 'pill-active')
-                  : (isPixel ? 'text-slate-300 hover:bg-[#202433]' : 'text-slate-400 hover:bg-[#181d2e] hover:text-white')
-              }`}
+              className={activeTab === 'agent' ? (isPixel ? 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold transition pixel-pill-active' : 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition pill-active') : (isPixel ? 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold transition text-slate-300 hover:bg-[#202433]' : 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-400 hover:bg-[#181d2e] hover:text-white')}
             >
               <Bot className="w-4 h-4" /> RAG Chief Assistant
             </button>
 
             <button
               onClick={() => setActiveTab('screener')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 ${isPixel ? 'rounded-lg' : 'rounded-xl'} text-xs font-semibold transition ${
-                activeTab === 'screener'
-                  ? (isPixel ? 'pixel-pill-active' : 'pill-active')
-                  : (isPixel ? 'text-slate-300 hover:bg-[#181d2e] hover:text-white')
-              }`}
+              className={activeTab === 'screener' ? (isPixel ? 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold transition pixel-pill-active' : 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition pill-active') : (isPixel ? 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold transition text-slate-300 hover:bg-[#202433]' : 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-400 hover:bg-[#181d2e] hover:text-white')}
             >
               <BarChart3 className="w-4 h-4" /> Screener & Ratios
             </button>
 
             <button
               onClick={() => setActiveTab('analytics')}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 ${isPixel ? 'rounded-lg' : 'rounded-xl'} text-xs font-semibold transition ${
-                activeTab === 'analytics'
-                  ? (isPixel ? 'pixel-pill-active' : 'pill-active')
-                  : (isPixel ? 'text-slate-300 hover:bg-[#181d2e] hover:text-white')
-              }`}
+              className={activeTab === 'analytics' ? (isPixel ? 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold transition pixel-pill-active' : 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition pill-active') : (isPixel ? 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold transition text-slate-300 hover:bg-[#202433]' : 'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition text-slate-400 hover:bg-[#181d2e] hover:text-white')}
             >
               <PieIcon className="w-4 h-4" /> Analytics & Charts
             </button>
@@ -634,19 +621,15 @@ export default function DashboardPage() {
           {/* Interactive Theme Switcher Button */}
           <button
             onClick={() => setHasSelectedTheme(false)}
-            className={`w-full py-2 px-3 text-[11px] font-bold flex items-center justify-center gap-2 ${
-              isPixel
-                ? 'pixel-btn-secondary text-black'
-                : 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-600 hover:text-white rounded-xl'
-            } transition`}
+            className={isPixel ? 'w-full py-2 px-3 text-[11px] font-bold flex items-center justify-center gap-2 pixel-btn-secondary text-black transition' : 'w-full py-2 px-3 text-[11px] font-bold flex items-center justify-center gap-2 bg-indigo-600/20 text-indigo-300 border border-indigo-500/40 hover:bg-indigo-600 hover:text-white rounded-xl transition'}
           >
             <Palette className="w-3.5 h-3.5" />
             {isPixel ? '🎮 SWITCH THEME' : '✨ Change Workspace Theme'}
           </button>
 
-          <div className={`${isPixel ? 'pixel-panel p-3' : 'bg-[#161b2c] p-3 rounded-xl border border-[#262d45]'} flex items-center justify-between`}>
+          <div className={isPixel ? 'pixel-panel p-3 flex items-center justify-between' : 'bg-[#161b2c] p-3 rounded-xl border border-[#262d45] flex items-center justify-between'}>
             <div className="overflow-hidden">
-              <span className={`text-[10px] ${isPixel ? 'text-amber-400 font-pixel-body font-bold' : 'text-slate-400 font-semibold'} uppercase block`}>Analyst Profile</span>
+              <span className={isPixel ? 'text-[10px] text-amber-400 font-pixel-body font-bold uppercase block' : 'text-[10px] text-slate-400 font-semibold uppercase block'}>Analyst Profile</span>
               <span className="text-white font-bold text-xs truncate block">{currentUser.email}</span>
             </div>
             <button onClick={() => setIsLoggedIn(false)} title="Sign Out" className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-[#181d2e]">
@@ -659,7 +642,7 @@ export default function DashboardPage() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Header Bar */}
-        <header className={`h-16 ${isPixel ? 'bg-[#161926] border-b-4 border-black shadow-[0px_4px_0px_0px_#000]' : 'border-b border-[#1e2436] bg-[#10131e]/90 backdrop-blur-md'} px-6 flex items-center justify-between sticky top-0 z-40`}>
+        <header className={headerClass}>
           {/* Top Search Bar with Live Ticker Autocomplete */}
           <div className="relative max-w-lg w-full">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3 z-10" />
@@ -673,28 +656,20 @@ export default function DashboardPage() {
                 setShowSuggestions(true);
               }}
               onKeyDown={(e) => e.key === 'Enter' && handleFollowStock(searchQuery)}
-              className={`w-full ${
-                isPixel
-                  ? 'bg-[#202433] border-3 border-black text-xs text-white placeholder-slate-400 px-4 pl-10 pr-24 py-2 font-pixel-body shadow-[2px_2px_0px_0px_#000]'
-                  : 'bg-[#181d2e] border border-[#262d45] rounded-full pl-10 pr-24 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500'
-              }`}
+              className={isPixel ? 'w-full bg-[#202433] border-3 border-black text-xs text-white placeholder-slate-400 px-4 pl-10 pr-24 py-2 font-pixel-body shadow-[2px_2px_0px_0px_#000]' : 'w-full bg-[#181d2e] border border-[#262d45] rounded-full pl-10 pr-24 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500'}
             />
             <button
               onClick={() => handleFollowStock(searchQuery)}
               disabled={isIngesting || !searchQuery.trim()}
-              className={`absolute right-1.5 top-1 z-10 text-[11px] font-semibold px-4 py-1 transition disabled:opacity-50 ${
-                isPixel
-                  ? 'pixel-btn-primary py-0.5'
-                  : 'bg-blue-600 hover:bg-blue-500 text-white rounded-full'
-              }`}
+              className={isPixel ? 'absolute right-1.5 top-1 z-10 text-[11px] font-semibold px-4 py-1 transition disabled:opacity-50 pixel-btn-primary py-0.5' : 'absolute right-1.5 top-1 z-10 text-[11px] font-semibold px-4 py-1 transition disabled:opacity-50 bg-blue-600 hover:bg-blue-500 text-white rounded-full'}
             >
               {isIngesting ? <RefreshCw className="w-3 h-3 animate-spin" /> : 'Ingest'}
             </button>
 
             {/* Live Autocomplete Suggestions Dropdown */}
             {showSuggestions && matchingSuggestions.length > 0 && (
-              <div className={`absolute top-11 left-0 right-0 ${isPixel ? 'bg-[#181b26] border-4 border-black shadow-[4px_4px_0px_0px_#000]' : 'bg-[#121624] border border-[#262d45] rounded-2xl shadow-2xl'} z-50 max-h-60 overflow-y-auto p-2`}>
-                <span className={`text-[10px] font-bold ${isPixel ? 'text-amber-400 font-pixel-heading' : 'text-slate-500'} uppercase tracking-wider px-3 py-1 block`}>Suggested Indian Stocks</span>
+              <div className={isPixel ? 'absolute top-11 left-0 right-0 bg-[#181b26] border-4 border-black shadow-[4px_4px_0px_0px_#000] z-50 max-h-60 overflow-y-auto p-2' : 'absolute top-11 left-0 right-0 bg-[#121624] border border-[#262d45] rounded-2xl shadow-2xl z-50 max-h-60 overflow-y-auto p-2'}>
+                <span className={isPixel ? 'text-[10px] font-bold text-amber-400 font-pixel-heading uppercase tracking-wider px-3 py-1 block' : 'text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 py-1 block'}>Suggested Indian Stocks</span>
                 {matchingSuggestions.map(s => (
                   <div
                     key={s.symbol}
@@ -702,13 +677,13 @@ export default function DashboardPage() {
                       setSearchQuery(s.symbol);
                       handleFollowStock(s.symbol);
                     }}
-                    className={`flex items-center justify-between p-2.5 hover:bg-[#202433] ${isPixel ? 'border-b border-black' : 'rounded-xl'} cursor-pointer transition text-xs`}
+                    className={isPixel ? 'flex items-center justify-between p-2.5 hover:bg-[#202433] border-b border-black cursor-pointer transition text-xs' : 'flex items-center justify-between p-2.5 hover:bg-[#181d2e] rounded-xl cursor-pointer transition text-xs'}
                   >
                     <div>
                       <span className="font-bold text-white text-xs block">{s.symbol}</span>
                       <span className="text-[10px] text-slate-400">{s.name} • {s.sector}</span>
                     </div>
-                    <span className={`text-[10px] ${isPixel ? 'pixel-pill-active' : 'bg-blue-950 text-blue-300 border border-blue-800 rounded-lg'} font-semibold px-2.5 py-1`}>+ Ingest RAG</span>
+                    <span className={isPixel ? 'text-[10px] pixel-pill-active font-semibold px-2.5 py-1' : 'text-[10px] bg-blue-950 text-blue-300 border border-blue-800 rounded-lg font-semibold px-2.5 py-1'}>+ Ingest RAG</span>
                   </div>
                 ))}
               </div>
@@ -719,16 +694,12 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSelectedTheme(isPixel ? 'obsidian' : 'pixel')}
-              className={`px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5 ${
-                isPixel
-                  ? 'pixel-btn-secondary text-black'
-                  : 'bg-[#181d2e] hover:bg-blue-600 text-slate-300 hover:text-white border border-[#262d45] rounded-full'
-              }`}
+              className={isPixel ? 'px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5 pixel-btn-secondary text-black' : 'px-3 py-1.5 text-xs font-bold transition flex items-center gap-1.5 bg-[#181d2e] hover:bg-blue-600 text-slate-300 hover:text-white border border-[#262d45] rounded-full'}
             >
               {isPixel ? '✨ Obsidian Mode' : '🕹️ Pixel 8-Bit Mode'}
             </button>
 
-            <div className={`${isPixel ? 'pixel-panel px-3 py-1 text-[11px] font-bold text-emerald-400' : 'bg-[#181d2e] border border-[#262d45] rounded-full px-3.5 py-1.5 text-xs text-white font-medium'} flex items-center gap-2`}>
+            <div className={isPixel ? 'pixel-panel px-3 py-1 text-[11px] font-bold text-emerald-400 flex items-center gap-2' : 'bg-[#181d2e] border border-[#262d45] rounded-full px-3.5 py-1.5 text-xs text-white font-medium flex items-center gap-2'}>
               <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
               {currentUser.email}
             </div>
@@ -736,8 +707,8 @@ export default function DashboardPage() {
         </header>
 
         {/* Quick Ingest Select Example Companies Banner */}
-        <div className={`${isPixel ? 'bg-[#181b26] border-b-4 border-black' : 'bg-[#0e121d] border-b border-[#1e2436]'} px-6 py-2.5 flex items-center gap-3 overflow-x-auto`}>
-          <span className={`text-[11px] font-bold ${isPixel ? 'text-amber-400 font-pixel-heading' : 'text-blue-400'} uppercase tracking-wider whitespace-nowrap flex items-center gap-1`}>
+        <div className={quickBannerClass}>
+          <span className={isPixel ? 'text-[11px] font-bold text-amber-400 font-pixel-heading uppercase tracking-wider whitespace-nowrap flex items-center gap-1' : 'text-[11px] font-bold text-blue-400 uppercase tracking-wider whitespace-nowrap flex items-center gap-1'}>
             ⚡ Quick Ingest Select:
           </span>
           <div className="flex items-center gap-2">
@@ -745,13 +716,7 @@ export default function DashboardPage() {
               <button
                 key={comp.symbol}
                 onClick={() => handleFollowStock(comp.symbol)}
-                className={`text-xs px-3 py-1 transition flex items-center gap-1.5 whitespace-nowrap ${
-                  isPixel
-                    ? (lastIngestedSymbol === comp.symbol ? 'pixel-btn-primary animate-pulse' : 'pixel-pill-inactive')
-                    : (lastIngestedSymbol === comp.symbol
-                        ? 'bg-blue-600 text-white border-blue-400 shadow-md font-bold animate-pulse rounded-full'
-                        : 'bg-[#181d2e] hover:bg-blue-600 text-slate-300 hover:text-white border-[#262d45] rounded-full')
-                }`}
+                className={isPixel ? (lastIngestedSymbol === comp.symbol ? 'text-xs px-3 py-1 transition flex items-center gap-1.5 whitespace-nowrap pixel-btn-primary animate-pulse' : 'text-xs px-3 py-1 transition flex items-center gap-1.5 whitespace-nowrap pixel-pill-inactive') : (lastIngestedSymbol === comp.symbol ? 'text-xs px-3 py-1 transition flex items-center gap-1.5 whitespace-nowrap bg-blue-600 text-white border-blue-400 shadow-md font-bold animate-pulse rounded-full' : 'text-xs px-3 py-1 transition flex items-center gap-1.5 whitespace-nowrap bg-[#181d2e] hover:bg-blue-600 text-slate-300 hover:text-white border-[#262d45] rounded-full')}
               >
                 <span className="font-bold">{isPixel ? `[ ${comp.symbol} ]` : comp.symbol}</span>
                 <span className="text-[10px] opacity-80">({comp.price})</span>
@@ -769,13 +734,13 @@ export default function DashboardPage() {
             <div className="space-y-6">
               {/* Top Row Cards */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div className={`${isPixel ? 'pixel-panel p-5' : 'glass-panel rounded-2xl p-5 border border-[#22283d]'} lg:col-span-4 flex flex-col justify-between`}>
+                <div className={isPixel ? 'pixel-panel p-5 lg:col-span-4 flex flex-col justify-between' : 'glass-panel rounded-2xl p-5 border border-[#22283d] lg:col-span-4 flex flex-col justify-between'}>
                   <div>
-                    <span className={`text-xs font-medium ${isPixel ? 'text-amber-400 font-bold' : 'text-slate-400'} block`}>
+                    <span className={isPixel ? 'text-xs font-medium text-amber-400 font-bold block' : 'text-xs font-medium text-slate-400 block'}>
                       Total Tracked Equity Holding
                     </span>
                     <div className="flex items-baseline gap-2 mt-1">
-                      <h2 className={`text-2xl font-bold ${isPixel ? 'text-emerald-400 font-pixel-heading text-xl' : 'text-white'}`}>
+                      <h2 className={isPixel ? 'text-2xl font-bold text-emerald-400 font-pixel-heading text-xl' : 'text-2xl font-bold text-white'}>
                         Rs {totalPortfolioValue.toLocaleString()}.00
                       </h2>
                       <span className="text-xs font-semibold text-emerald-400 flex items-center">
@@ -794,8 +759,8 @@ export default function DashboardPage() {
                     </div>
                   )}
 
-                  <div className={`mt-4 pt-4 ${isPixel ? 'border-t-2 border-black' : 'border-t border-[#1e2436]'}`}>
-                    <span className={`text-[10px] font-semibold ${isPixel ? 'text-amber-400 font-pixel-heading' : 'text-slate-400'} uppercase tracking-wider block mb-2`}>
+                  <div className={isPixel ? 'mt-4 pt-4 border-t-2 border-black' : 'mt-4 pt-4 border-t border-[#1e2436]'}>
+                    <span className={isPixel ? 'text-[10px] font-semibold text-amber-400 font-pixel-heading uppercase tracking-wider block mb-2' : 'text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-2'}>
                       Select Example Companies to Ingest
                     </span>
                     <div className="flex flex-wrap gap-1.5">
@@ -803,11 +768,7 @@ export default function DashboardPage() {
                         <button
                           key={t.symbol}
                           onClick={() => handleFollowStock(t.symbol)}
-                          className={`text-[11px] px-2.5 py-1 transition ${
-                            isPixel
-                              ? 'pixel-pill-inactive'
-                              : 'bg-[#181d2e] hover:bg-blue-600 hover:text-white text-slate-300 rounded-full border border-[#262d45]'
-                          }`}
+                          className={isPixel ? 'text-[11px] px-2.5 py-1 transition pixel-pill-inactive' : 'text-[11px] px-2.5 py-1 transition bg-[#181d2e] hover:bg-blue-600 hover:text-white text-slate-300 rounded-full border border-[#262d45]'}
                         >
                           + {t.symbol}
                         </button>
@@ -822,22 +783,18 @@ export default function DashboardPage() {
                     <div
                       key={s.symbol}
                       onClick={() => handleOpenStockDetail(s.symbol)}
-                      className={`${
-                        isPixel
-                          ? 'pixel-card min-w-[210px] p-4 cursor-pointer flex-1'
-                          : 'glass-card min-w-[210px] flex-1 rounded-2xl p-4 cursor-pointer transition group'
-                      }`}
+                      className={isPixel ? 'pixel-card min-w-[210px] p-4 cursor-pointer flex-1' : 'glass-card min-w-[210px] flex-1 rounded-2xl p-4 cursor-pointer transition group'}
                     >
                       <div className="flex items-center justify-between">
-                        <span className={`font-bold text-white text-sm ${isPixel ? 'font-pixel-heading text-xs' : ''}`}>{s.symbol}</span>
-                        <span className={`text-[10px] ${isPixel ? 'bg-amber-400 text-black font-bold px-1.5 py-0.5 border border-black' : 'bg-blue-950 text-blue-400 font-semibold px-2 py-0.5 rounded-md'}`}>
+                        <span className={isPixel ? 'font-bold text-white font-pixel-heading text-xs' : 'font-bold text-white text-sm'}>{s.symbol}</span>
+                        <span className={isPixel ? 'text-[10px] bg-amber-400 text-black font-bold px-1.5 py-0.5 border border-black' : 'text-[10px] bg-blue-950 text-blue-400 font-semibold px-2 py-0.5 rounded-md'}>
                           NSE
                         </span>
                       </div>
                       <span className="text-[10px] text-slate-400 truncate block mt-0.5">{s.name}</span>
                       
                       <div className="mt-4">
-                        <span className={`text-lg font-extrabold ${isPixel ? 'text-emerald-400 font-pixel-body' : 'text-white'}`}>
+                        <span className={isPixel ? 'text-lg font-extrabold text-emerald-400 font-pixel-body' : 'text-lg font-extrabold text-white'}>
                           Rs {s.current_price_inr.toLocaleString()}
                         </span>
                         <div className="flex items-center justify-between text-[11px] text-slate-400 mt-2">
@@ -853,9 +810,9 @@ export default function DashboardPage() {
               {/* Main Grid: Fundamentals Table & RAG Chat Drawer */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* Watchlist Fundamentals Table */}
-                <div className={`${isPixel ? 'pixel-panel p-5' : 'glass-panel rounded-2xl p-5 border border-[#22283d]'} lg:col-span-7 space-y-4`}>
+                <div className={isPixel ? 'pixel-panel p-5 lg:col-span-7 space-y-4' : 'glass-panel rounded-2xl p-5 border border-[#22283d] lg:col-span-7 space-y-4'}>
                   <div className="flex items-center justify-between">
-                    <h3 className={`font-bold text-white text-sm flex items-center gap-2 ${isPixel ? 'font-pixel-heading text-xs text-emerald-400' : ''}`}>
+                    <h3 className={isPixel ? 'font-bold text-white font-pixel-heading text-xs text-emerald-400 flex items-center gap-2' : 'font-bold text-white text-sm flex items-center gap-2'}>
                       <Activity className="w-4 h-4 text-blue-400" />
                       Tracked Stock Fundamentals & Sentiment ({filteredStocks.length})
                     </h3>
@@ -867,7 +824,7 @@ export default function DashboardPage() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-left text-xs">
                       <thead>
-                        <tr className={`${isPixel ? 'border-b-2 border-black text-amber-400 font-pixel-heading text-[10px]' : 'border-b border-[#1e2436] text-slate-400 font-semibold'}`}>
+                        <tr className={isPixel ? 'border-b-2 border-black text-amber-400 font-pixel-heading text-[10px]' : 'border-b border-[#1e2436] text-slate-400 font-semibold'}>
                           <th className="pb-3">Stock Ticker</th>
                           <th className="pb-3">Price (INR)</th>
                           <th className="pb-3">P/E</th>
@@ -882,19 +839,19 @@ export default function DashboardPage() {
                             <td className="py-3 font-bold text-white flex items-center gap-2">
                               {s.symbol}
                               {lastIngestedSymbol === s.symbol && (
-                                <span className={`text-[9px] ${isPixel ? 'bg-emerald-500 text-black border border-black' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'} font-bold px-1.5 py-0.5 rounded animate-pulse`}>
+                                <span className={isPixel ? 'text-[9px] bg-emerald-500 text-black border border-black font-bold px-1.5 py-0.5 animate-pulse' : 'text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold px-1.5 py-0.5 rounded animate-pulse'}>
                                   NEW
                                 </span>
                               )}
                             </td>
-                            <td className={`py-3 font-semibold ${isPixel ? 'text-emerald-400 font-bold' : 'text-slate-200'}`}>Rs {s.current_price_inr.toLocaleString()}</td>
+                            <td className={isPixel ? 'py-3 font-semibold text-emerald-400 font-bold' : 'py-3 font-semibold text-slate-200'}>Rs {s.current_price_inr.toLocaleString()}</td>
                             <td className="py-3 text-slate-300">{s.pe_ratio}</td>
-                            <td className={`py-3 font-bold ${s.debt_to_equity <= 0.5 ? 'text-emerald-400' : 'text-amber-400'}`}>{s.debt_to_equity}</td>
+                            <td className={s.debt_to_equity <= 0.5 ? 'py-3 font-bold text-emerald-400' : 'py-3 font-bold text-amber-400'}>{s.debt_to_equity}</td>
                             <td className="py-3 text-slate-300">{s.roce_pct}%</td>
                             <td className="py-3 text-right">
                               <button
                                 onClick={() => handleOpenStockDetail(s.symbol)}
-                                className={`text-[11px] ${isPixel ? 'pixel-btn-secondary px-2 py-0.5 text-xs' : 'bg-[#181d2e] hover:bg-blue-600 text-slate-300 hover:text-white px-3 py-1 rounded-lg border border-[#262d45]'} transition`}
+                                className={isPixel ? 'text-[11px] pixel-btn-secondary px-2 py-0.5 text-xs transition' : 'text-[11px] bg-[#181d2e] hover:bg-blue-600 text-slate-300 hover:text-white px-3 py-1 rounded-lg border border-[#262d45] transition'}
                               >
                                 Details
                               </button>
@@ -907,19 +864,19 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Agentic RAG Chief Assistant Sidebar Drawer */}
-                <div className={`${isPixel ? 'pixel-panel p-5' : 'glass-panel rounded-2xl p-5 border border-[#22283d]'} lg:col-span-5 flex flex-col justify-between space-y-4`}>
+                <div className={isPixel ? 'pixel-panel p-5 lg:col-span-5 flex flex-col justify-between space-y-4' : 'glass-panel rounded-2xl p-5 border border-[#22283d] lg:col-span-5 flex flex-col justify-between space-y-4'}>
                   <div className="flex items-center justify-between border-b border-[#1e2436] pb-3">
                     <div className="flex items-center gap-2">
                       <Bot className="w-5 h-5 text-blue-400" />
-                      <h3 className={`font-bold text-white text-sm ${isPixel ? 'font-pixel-heading text-xs text-emerald-400' : ''}`}>RAG Chief Assistant</h3>
+                      <h3 className={isPixel ? 'font-bold text-white font-pixel-heading text-xs text-emerald-400' : 'font-bold text-white text-sm'}>RAG Chief Assistant</h3>
                     </div>
-                    <span className={`text-[10px] ${isPixel ? 'bg-amber-400 text-black border border-black font-bold px-2 py-0.5' : 'bg-blue-950 text-blue-300 border border-blue-800 px-2.5 py-0.5 rounded-full'} font-semibold`}>
+                    <span className={isPixel ? 'text-[10px] bg-amber-400 text-black border border-black font-bold px-2 py-0.5' : 'text-[10px] bg-blue-950 text-blue-300 border border-blue-800 px-2.5 py-0.5 rounded-full font-semibold'}>
                       LangGraph Active
                     </span>
                   </div>
 
                   {/* Active Investor Persona Pill */}
-                  <div className={`${isPixel ? 'bg-[#202433] border-2 border-black p-3 text-[11px]' : 'bg-[#161b2c] p-3 rounded-xl border border-[#262d45] text-xs'} space-y-1`}>
+                  <div className={isPixel ? 'bg-[#202433] border-2 border-black p-3 text-[11px] space-y-1' : 'bg-[#161b2c] p-3 rounded-xl border border-[#262d45] text-xs space-y-1'}>
                     <span className="text-[10px] text-slate-400 font-semibold uppercase block">Investor Persona:</span>
                     <p className="text-white font-bold">{persona.risk_profile} Investor (Max Debt: {persona.max_debt_to_equity})</p>
                   </div>
@@ -927,12 +884,8 @@ export default function DashboardPage() {
                   {/* Chat Messages Log */}
                   <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
                     {chatMessages.map((msg, i) => (
-                      <div key={i} className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
-                        <div className={`p-3 text-xs leading-relaxed max-w-[90%] ${
-                          msg.sender === 'user'
-                            ? (isPixel ? 'bg-blue-600 text-white border-2 border-black shadow-[2px_2px_0px_0px_#000]' : 'bg-blue-600 text-white rounded-2xl rounded-tr-none')
-                            : (isPixel ? 'bg-[#202433] text-slate-200 border-2 border-black shadow-[2px_2px_0px_0px_#000]' : 'bg-[#181d2e] text-slate-200 border border-[#262d45] rounded-2xl rounded-tl-none')
-                        }`}>
+                      <div key={i} className={msg.sender === 'user' ? 'flex flex-col items-end' : 'flex flex-col items-start'}>
+                        <div className={msg.sender === 'user' ? (isPixel ? 'p-3 text-xs leading-relaxed max-w-[90%] bg-blue-600 text-white border-2 border-black shadow-[2px_2px_0px_0px_#000]' : 'p-3 text-xs leading-relaxed max-w-[90%] bg-blue-600 text-white rounded-2xl rounded-tr-none') : (isPixel ? 'p-3 text-xs leading-relaxed max-w-[90%] bg-[#202433] text-slate-200 border-2 border-black shadow-[2px_2px_0px_0px_#000]' : 'p-3 text-xs leading-relaxed max-w-[90%] bg-[#181d2e] text-slate-200 border border-[#262d45] rounded-2xl rounded-tl-none')}>
                           <p className="whitespace-pre-line">{msg.text}</p>
                           
                           {/* Grounded Citations */}
@@ -965,16 +918,12 @@ export default function DashboardPage() {
                       value={inputMsg}
                       onChange={(e) => setInputMsg(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                      className={`w-full ${
-                        isPixel
-                          ? 'bg-[#202433] border-3 border-black text-xs text-white px-4 pr-12 py-3 font-pixel-body'
-                          : 'bg-[#181d2e] border border-[#262d45] rounded-xl px-4 pr-12 py-3 text-xs text-white focus:outline-none focus:border-blue-500'
-                      }`}
+                      className={isPixel ? 'w-full bg-[#202433] border-3 border-black text-xs text-white px-4 pr-12 py-3 font-pixel-body' : 'w-full bg-[#181d2e] border border-[#262d45] rounded-xl px-4 pr-12 py-3 text-xs text-white focus:outline-none focus:border-blue-500'}
                     />
                     <button
                       onClick={() => handleSendMessage()}
                       disabled={isAgentThinking}
-                      className={`absolute right-2 top-4 ${isPixel ? 'pixel-btn-primary p-1.5' : 'bg-blue-600 text-white p-2 rounded-lg'} transition`}
+                      className={isPixel ? 'absolute right-2 top-4 pixel-btn-primary p-1.5 transition' : 'absolute right-2 top-4 bg-blue-600 text-white p-2 rounded-lg transition'}
                     >
                       <Send className="w-3.5 h-3.5" />
                     </button>
@@ -991,7 +940,7 @@ export default function DashboardPage() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className={`text-xl font-bold text-white ${isPixel ? 'font-pixel-heading text-sm text-emerald-400' : ''}`}>
+                  <h2 className={isPixel ? 'text-xl font-bold text-white font-pixel-heading text-sm text-emerald-400' : 'text-xl font-bold text-white'}>
                     Tracked Indian Equity Portfolio Manager ({stocks.length})
                   </h2>
                   <p className="text-xs text-slate-400 mt-1">Manage followed tickers, Screener fundamentals, and live watchlist holdings</p>
@@ -1000,19 +949,19 @@ export default function DashboardPage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {stocks.map(s => (
-                  <div key={s.symbol} className={`${isPixel ? 'pixel-card p-5' : 'glass-card rounded-2xl p-5 border border-[#262d45]'} space-y-4`}>
+                  <div key={s.symbol} className={isPixel ? 'pixel-card p-5 space-y-4' : 'glass-card rounded-2xl p-5 border border-[#262d45] space-y-4'}>
                     <div className="flex items-center justify-between">
                       <div>
-                        <h3 className={`font-bold text-white text-base ${isPixel ? 'font-pixel-heading text-xs' : ''}`}>{s.symbol}</h3>
+                        <h3 className={isPixel ? 'font-bold text-white font-pixel-heading text-xs' : 'font-bold text-white text-base'}>{s.symbol}</h3>
                         <span className="text-xs text-slate-400 block">{s.name}</span>
                       </div>
-                      <span className={`text-[10px] ${isPixel ? 'bg-amber-400 text-black border border-black font-bold px-2 py-0.5' : 'bg-blue-950 text-blue-300 font-semibold px-2.5 py-1 rounded-lg border border-blue-800'}`}>
+                      <span className={isPixel ? 'text-[10px] bg-amber-400 text-black border border-black font-bold px-2 py-0.5' : 'text-[10px] bg-blue-950 text-blue-300 font-semibold px-2.5 py-1 rounded-lg border border-blue-800'}>
                         NSE: {s.symbol}
                       </span>
                     </div>
 
                     <div className="flex items-baseline justify-between">
-                      <span className={`text-xl font-extrabold ${isPixel ? 'text-emerald-400 font-pixel-body' : 'text-white'}`}>
+                      <span className={isPixel ? 'text-xl font-extrabold text-emerald-400 font-pixel-body' : 'text-xl font-extrabold text-white'}>
                         Rs {s.current_price_inr.toLocaleString()}
                       </span>
                       <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/30">
@@ -1041,11 +990,7 @@ export default function DashboardPage() {
 
                     <button
                       onClick={() => handleOpenStockDetail(s.symbol)}
-                      className={`w-full text-xs font-bold py-2.5 transition flex items-center justify-center gap-1.5 ${
-                        isPixel
-                          ? 'pixel-btn-secondary'
-                          : 'bg-[#181d2e] hover:bg-blue-600 text-slate-200 hover:text-white rounded-xl border border-[#262d45]'
-                      }`}
+                      className={isPixel ? 'w-full text-xs font-bold py-2.5 transition flex items-center justify-center gap-1.5 pixel-btn-secondary' : 'w-full text-xs font-bold py-2.5 transition flex items-center justify-center gap-1.5 bg-[#181d2e] hover:bg-blue-600 text-slate-200 hover:text-white rounded-xl border border-[#262d45]'}
                     >
                       View Screener Fundamentals & News <ArrowUpRight className="w-3.5 h-3.5" />
                     </button>
@@ -1061,27 +1006,27 @@ export default function DashboardPage() {
           {activeTab === 'agent' && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-140px)]">
               {/* Left Panel: Learned Investor Persona State */}
-              <div className={`${isPixel ? 'pixel-panel p-5' : 'glass-panel rounded-2xl p-5 border border-[#22283d]'} lg:col-span-4 space-y-4 overflow-y-auto`}>
+              <div className={isPixel ? 'pixel-panel p-5 lg:col-span-4 space-y-4 overflow-y-auto' : 'glass-panel rounded-2xl p-5 border border-[#22283d] lg:col-span-4 space-y-4 overflow-y-auto'}>
                 <div className="flex items-center gap-2 border-b border-[#1e2436] pb-3">
                   <Layers className="w-5 h-5 text-blue-400" />
                   <div>
-                    <h3 className={`font-bold text-white text-sm ${isPixel ? 'font-pixel-heading text-xs text-emerald-400' : ''}`}>Learned Investor Persona</h3>
+                    <h3 className={isPixel ? 'font-bold text-white font-pixel-heading text-xs text-emerald-400' : 'font-bold text-white text-sm'}>Learned Investor Persona</h3>
                     <span className="text-[10px] text-slate-400">Persistent LangGraph Memory</span>
                   </div>
                 </div>
 
                 <div className="space-y-3 text-xs">
-                  <div className={`${isPixel ? 'bg-[#202433] border-2 border-black p-3' : 'bg-[#161b2c] p-3 rounded-xl border border-[#262d45]'}`}>
+                  <div className={isPixel ? 'bg-[#202433] border-2 border-black p-3' : 'bg-[#161b2c] p-3 rounded-xl border border-[#262d45]'}>
                     <span className="text-[10px] text-slate-400 uppercase font-semibold block">Risk Profile</span>
                     <strong className="text-white text-sm block mt-0.5">{persona.risk_profile}</strong>
                   </div>
 
-                  <div className={`${isPixel ? 'bg-[#202433] border-2 border-black p-3' : 'bg-[#161b2c] p-3 rounded-xl border border-[#262d45]'}`}>
+                  <div className={isPixel ? 'bg-[#202433] border-2 border-black p-3' : 'bg-[#161b2c] p-3 rounded-xl border border-[#262d45]'}>
                     <span className="text-[10px] text-slate-400 uppercase font-semibold block">Max Debt to Equity</span>
                     <strong className="text-amber-400 text-sm block mt-0.5">{persona.max_debt_to_equity}</strong>
                   </div>
 
-                  <div className={`${isPixel ? 'bg-[#202433] border-2 border-black p-3' : 'bg-[#161b2c] p-3 rounded-xl border border-[#262d45]'}`}>
+                  <div className={isPixel ? 'bg-[#202433] border-2 border-black p-3' : 'bg-[#161b2c] p-3 rounded-xl border border-[#262d45]'}>
                     <span className="text-[10px] text-slate-400 uppercase font-semibold block">Min Dividend Yield</span>
                     <strong className="text-blue-400 text-sm block mt-0.5">{persona.min_dividend_yield}%</strong>
                   </div>
@@ -1089,20 +1034,16 @@ export default function DashboardPage() {
               </div>
 
               {/* Right Panel: Full Screen Agent Chat */}
-              <div className={`${isPixel ? 'pixel-panel p-5' : 'glass-panel rounded-2xl p-5 border border-[#22283d]'} lg:col-span-8 flex flex-col justify-between`}>
+              <div className={isPixel ? 'pixel-panel p-5 lg:col-span-8 flex flex-col justify-between' : 'glass-panel rounded-2xl p-5 border border-[#22283d] lg:col-span-8 flex flex-col justify-between'}>
                 <div className="border-b border-[#1e2436] pb-3 flex items-center justify-between">
-                  <h3 className={`font-bold text-white text-sm ${isPixel ? 'font-pixel-heading text-xs text-emerald-400' : ''}`}>Agentic RAG Chief Assistant</h3>
+                  <h3 className={isPixel ? 'font-bold text-white font-pixel-heading text-xs text-emerald-400' : 'font-bold text-white text-sm'}>Agentic RAG Chief Assistant</h3>
                   <span className="text-[10px] text-slate-400">Grounding Indian stock answers in Screener.in fundamentals & RSS news</span>
                 </div>
 
                 <div className="flex-1 overflow-y-auto space-y-4 my-4 pr-2">
                   {chatMessages.map((msg, i) => (
-                    <div key={i} className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}>
-                      <div className={`p-4 text-xs leading-relaxed max-w-[85%] ${
-                        msg.sender === 'user'
-                          ? (isPixel ? 'bg-blue-600 text-white border-2 border-black shadow-[3px_3px_0px_0px_#000]' : 'bg-blue-600 text-white rounded-2xl rounded-tr-none')
-                          : (isPixel ? 'bg-[#202433] text-slate-200 border-2 border-black shadow-[3px_3px_0px_0px_#000]' : 'bg-[#181d2e] text-slate-200 border border-[#262d45] rounded-2xl rounded-tl-none')
-                      }`}>
+                    <div key={i} className={msg.sender === 'user' ? 'flex flex-col items-end' : 'flex flex-col items-start'}>
+                      <div className={msg.sender === 'user' ? (isPixel ? 'p-4 text-xs leading-relaxed max-w-[85%] bg-blue-600 text-white border-2 border-black shadow-[3px_3px_0px_0px_#000]' : 'p-4 text-xs leading-relaxed max-w-[85%] bg-blue-600 text-white rounded-2xl rounded-tr-none') : (isPixel ? 'p-4 text-xs leading-relaxed max-w-[85%] bg-[#202433] text-slate-200 border-2 border-black shadow-[3px_3px_0px_0px_#000]' : 'p-4 text-xs leading-relaxed max-w-[85%] bg-[#181d2e] text-slate-200 border border-[#262d45] rounded-2xl rounded-tl-none')}>
                         <p className="whitespace-pre-line">{msg.text}</p>
                       </div>
                     </div>
@@ -1116,16 +1057,12 @@ export default function DashboardPage() {
                     value={inputMsg}
                     onChange={(e) => setInputMsg(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                    className={`w-full ${
-                      isPixel
-                        ? 'bg-[#202433] border-3 border-black text-xs text-white px-4 pr-16 py-3.5 font-pixel-body'
-                        : 'bg-[#181d2e] border border-[#262d45] rounded-xl px-4 pr-16 py-3.5 text-xs text-white focus:outline-none focus:border-blue-500'
-                    }`}
+                    className={isPixel ? 'w-full bg-[#202433] border-3 border-black text-xs text-white px-4 pr-16 py-3.5 font-pixel-body' : 'w-full bg-[#181d2e] border border-[#262d45] rounded-xl px-4 pr-16 py-3.5 text-xs text-white focus:outline-none focus:border-blue-500'}
                   />
                   <button
                     onClick={() => handleSendMessage()}
                     disabled={isAgentThinking}
-                    className={`absolute right-2 top-2 ${isPixel ? 'pixel-btn-primary px-4 py-2 text-xs' : 'bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold'} transition`}
+                    className={isPixel ? 'absolute right-2 top-2 pixel-btn-primary px-4 py-2 text-xs transition' : 'absolute right-2 top-2 bg-blue-600 text-white px-4 py-2 rounded-lg text-xs font-bold transition'}
                   >
                     Ask
                   </button>
@@ -1141,7 +1078,7 @@ export default function DashboardPage() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className={`text-xl font-bold text-white ${isPixel ? 'font-pixel-heading text-sm text-emerald-400' : ''}`}>
+                  <h2 className={isPixel ? 'text-xl font-bold text-white font-pixel-heading text-sm text-emerald-400' : 'text-xl font-bold text-white'}>
                     Screener.in Fundamentals & Multi-Factor Ratios Engine
                   </h2>
                   <p className="text-xs text-slate-400 mt-1">Filter NIFTY / BSE universe by P/E, Debt to Equity ceiling, ROCE, and Dividend Yield</p>
@@ -1149,7 +1086,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Controls */}
-              <div className={`${isPixel ? 'pixel-panel p-5' : 'glass-panel rounded-2xl p-5 border border-[#22283d]'} grid grid-cols-1 md:grid-cols-3 gap-6`}>
+              <div className={isPixel ? 'pixel-panel p-5 grid grid-cols-1 md:grid-cols-3 gap-6' : 'glass-panel rounded-2xl p-5 border border-[#22283d] grid grid-cols-1 md:grid-cols-3 gap-6'}>
                 <div>
                   <label className="text-xs font-semibold text-slate-300 block mb-2">Max Debt to Equity Ratio ({screenerMaxDebt})</label>
                   <input
@@ -1183,21 +1120,17 @@ export default function DashboardPage() {
                     placeholder="Filter by ticker or name..."
                     value={screenerSearch}
                     onChange={(e) => setScreenerSearch(e.target.value)}
-                    className={`w-full ${
-                      isPixel
-                        ? 'bg-[#202433] border-2 border-black text-xs text-white px-3 py-2'
-                        : 'bg-[#181d2e] border border-[#262d45] rounded-xl px-3 py-2 text-xs text-white'
-                    }`}
+                    className={isPixel ? 'w-full bg-[#202433] border-2 border-black text-xs text-white px-3 py-2' : 'w-full bg-[#181d2e] border border-[#262d45] rounded-xl px-3 py-2 text-xs text-white'}
                   />
                 </div>
               </div>
 
               {/* Table */}
-              <div className={`${isPixel ? 'pixel-panel p-5' : 'glass-panel rounded-2xl p-5 border border-[#22283d]'}`}>
+              <div className={isPixel ? 'pixel-panel p-5' : 'glass-panel rounded-2xl p-5 border border-[#22283d]'}>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
                     <thead>
-                      <tr className={`${isPixel ? 'border-b-2 border-black text-amber-400 font-pixel-heading text-[10px]' : 'border-b border-[#1e2436] text-slate-400 font-semibold'}`}>
+                      <tr className={isPixel ? 'border-b-2 border-black text-amber-400 font-pixel-heading text-[10px]' : 'border-b border-[#1e2436] text-slate-400 font-semibold'}>
                         <th className="pb-3">Stock Ticker</th>
                         <th className="pb-3">Sector</th>
                         <th className="pb-3">Price (INR)</th>
@@ -1214,16 +1147,16 @@ export default function DashboardPage() {
                         <tr key={s.symbol} className="hover:bg-[#181d2e]/50 transition">
                           <td className="py-3 font-bold text-white">{s.symbol}</td>
                           <td className="py-3 text-slate-400">{s.sector}</td>
-                          <td className={`py-3 font-semibold ${isPixel ? 'text-emerald-400 font-bold' : 'text-slate-200'}`}>Rs {s.current_price_inr.toLocaleString()}</td>
+                          <td className={isPixel ? 'py-3 font-semibold text-emerald-400 font-bold' : 'py-3 font-semibold text-slate-200'}>Rs {s.current_price_inr.toLocaleString()}</td>
                           <td className="py-3 text-slate-300">{s.pe_ratio}</td>
-                          <td className={`py-3 font-bold ${s.debt_to_equity <= 0.5 ? 'text-emerald-400' : 'text-amber-400'}`}>{s.debt_to_equity}</td>
+                          <td className={s.debt_to_equity <= 0.5 ? 'py-3 font-bold text-emerald-400' : 'py-3 font-bold text-amber-400'}>{s.debt_to_equity}</td>
                           <td className="py-3 text-slate-300">{s.roce_pct}%</td>
                           <td className="py-3 text-slate-300">{s.roe_pct}%</td>
                           <td className="py-3 text-blue-400 font-semibold">{s.dividend_yield_pct}%</td>
                           <td className="py-3 text-right">
                             <button
                               onClick={() => handleOpenStockDetail(s.symbol)}
-                              className={`text-[11px] ${isPixel ? 'pixel-btn-secondary px-2 py-0.5 text-xs' : 'bg-[#181d2e] hover:bg-blue-600 text-slate-300 hover:text-white px-3 py-1 rounded-lg border border-[#262d45]'} transition`}
+                              className={isPixel ? 'text-[11px] pixel-btn-secondary px-2 py-0.5 text-xs transition' : 'text-[11px] bg-[#181d2e] hover:bg-blue-600 text-slate-300 hover:text-white px-3 py-1 rounded-lg border border-[#262d45] transition'}
                             >
                               View
                             </button>
@@ -1244,7 +1177,7 @@ export default function DashboardPage() {
             <div className="space-y-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className={`text-xl font-bold text-white ${isPixel ? 'font-pixel-heading text-sm text-emerald-400' : ''}`}>
+                  <h2 className={isPixel ? 'text-xl font-bold text-white font-pixel-heading text-sm text-emerald-400' : 'text-xl font-bold text-white'}>
                     Analytics & Financial Visualizations
                   </h2>
                   <p className="text-xs text-slate-400 mt-1">NIFTY 50 trend charts, ROCE vs P/E valuation bars, and sector allocation breakdown</p>
@@ -1253,19 +1186,15 @@ export default function DashboardPage() {
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* Time Series Area Chart */}
-                <div className={`${isPixel ? 'pixel-panel p-5' : 'glass-panel rounded-2xl p-5 border border-[#22283d]'} lg:col-span-8 space-y-4`}>
+                <div className={isPixel ? 'pixel-panel p-5 lg:col-span-8 space-y-4' : 'glass-panel rounded-2xl p-5 border border-[#22283d] lg:col-span-8 space-y-4'}>
                   <div className="flex items-center justify-between">
-                    <h3 className={`font-bold text-white text-sm ${isPixel ? 'font-pixel-heading text-xs text-emerald-400' : ''}`}>NIFTY 50 & Stock Growth Trend (INR)</h3>
+                    <h3 className={isPixel ? 'font-bold text-white font-pixel-heading text-xs text-emerald-400' : 'font-bold text-white text-sm'}>NIFTY 50 & Stock Growth Trend (INR)</h3>
                     <div className="flex gap-1.5">
                       {(['NIFTY', 'RELIANCE', 'TCS', 'HDFCBANK'] as const).map(m => (
                         <button
                           key={m}
                           onClick={() => setChartMetric(m)}
-                          className={`text-xs px-2.5 py-1 ${isPixel ? 'rounded-md' : 'rounded-lg'} transition ${
-                            chartMetric === m
-                              ? (isPixel ? 'pixel-pill-active' : 'bg-blue-600 text-white font-bold')
-                              : (isPixel ? 'pixel-pill-inactive' : 'bg-[#181d2e] text-slate-400 hover:text-white')
-                          }`}
+                          className={chartMetric === m ? (isPixel ? 'text-xs px-2.5 py-1 rounded-md transition pixel-pill-active' : 'text-xs px-2.5 py-1 rounded-lg transition bg-blue-600 text-white font-bold') : (isPixel ? 'text-xs px-2.5 py-1 rounded-md transition pixel-pill-inactive' : 'text-xs px-2.5 py-1 rounded-lg transition bg-[#181d2e] text-slate-400 hover:text-white')}
                         >
                           {m}
                         </button>
@@ -1292,8 +1221,8 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Sector Allocation Donut Chart */}
-                <div className={`${isPixel ? 'pixel-panel p-5' : 'glass-panel rounded-2xl p-5 border border-[#22283d]'} lg:col-span-4 space-y-4`}>
-                  <h3 className={`font-bold text-white text-sm ${isPixel ? 'font-pixel-heading text-xs text-emerald-400' : ''}`}>Sector Allocation</h3>
+                <div className={isPixel ? 'pixel-panel p-5 lg:col-span-4 space-y-4' : 'glass-panel rounded-2xl p-5 border border-[#22283d] lg:col-span-4 space-y-4'}>
+                  <h3 className={isPixel ? 'font-bold text-white font-pixel-heading text-xs text-emerald-400' : 'font-bold text-white text-sm'}>Sector Allocation</h3>
                   <div className="h-52">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
@@ -1333,10 +1262,10 @@ export default function DashboardPage() {
       {/* Stock Detail Modal */}
       {selectedStock && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className={`${isPixel ? 'pixel-panel max-w-2xl w-full p-6 space-y-6' : 'glass-panel max-w-2xl w-full rounded-3xl p-6 border border-[#262d45] space-y-6'}`}>
+          <div className={isPixel ? 'pixel-panel max-w-2xl w-full p-6 space-y-6' : 'glass-panel max-w-2xl w-full rounded-3xl p-6 border border-[#262d45] space-y-6'}>
             <div className="flex items-center justify-between border-b border-[#1e2436] pb-4">
               <div>
-                <h2 className={`text-xl font-bold text-white ${isPixel ? 'font-pixel-heading text-sm text-emerald-400' : ''}`}>
+                <h2 className={isPixel ? 'text-xl font-bold text-white font-pixel-heading text-sm text-emerald-400' : 'text-xl font-bold text-white'}>
                   {selectedStock.stock?.name || selectedStock.stock?.symbol || "Stock Details"}
                 </h2>
                 <span className="text-xs text-slate-400">
@@ -1349,15 +1278,15 @@ export default function DashboardPage() {
             </div>
 
             <div className="grid grid-cols-3 gap-4 text-center">
-              <div className={`${isPixel ? 'bg-[#202433] border-2 border-black p-3' : 'bg-[#161b2c] p-3 rounded-2xl border border-[#262d45]'}`}>
+              <div className={isPixel ? 'bg-[#202433] border-2 border-black p-3' : 'bg-[#161b2c] p-3 rounded-2xl border border-[#262d45]'}>
                 <span className="text-[10px] text-slate-400 uppercase font-semibold block">Market Cap</span>
                 <strong className="text-white text-sm block mt-1">Rs {selectedStock.stock?.market_cap_cr?.toLocaleString()} Cr</strong>
               </div>
-              <div className={`${isPixel ? 'bg-[#202433] border-2 border-black p-3' : 'bg-[#161b2c] p-3 rounded-2xl border border-[#262d45]'}`}>
+              <div className={isPixel ? 'bg-[#202433] border-2 border-black p-3' : 'bg-[#161b2c] p-3 rounded-2xl border border-[#262d45]'}>
                 <span className="text-[10px] text-slate-400 uppercase font-semibold block">P/E Ratio</span>
                 <strong className="text-white text-sm block mt-1">{selectedStock.stock?.pe_ratio}</strong>
               </div>
-              <div className={`${isPixel ? 'bg-[#202433] border-2 border-black p-3' : 'bg-[#161b2c] p-3 rounded-2xl border border-[#262d45]'}`}>
+              <div className={isPixel ? 'bg-[#202433] border-2 border-black p-3' : 'bg-[#161b2c] p-3 rounded-2xl border border-[#262d45]'}>
                 <span className="text-[10px] text-slate-400 uppercase font-semibold block">Debt to Equity</span>
                 <strong className={selectedStock.stock?.debt_to_equity <= 0.5 ? 'text-emerald-400 text-sm block mt-1' : 'text-amber-400 text-sm block mt-1'}>
                   {selectedStock.stock?.debt_to_equity}
@@ -1365,7 +1294,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <button onClick={() => setSelectedStock(null)} className={`w-full py-3 ${isPixel ? 'pixel-btn-primary' : 'bg-blue-600 text-white rounded-xl'} text-xs font-bold`}>
+            <button onClick={() => setSelectedStock(null)} className={isPixel ? 'w-full py-3 pixel-btn-primary text-xs font-bold' : 'w-full py-3 bg-blue-600 text-white rounded-xl text-xs font-bold'}>
               Close Window
             </button>
           </div>
