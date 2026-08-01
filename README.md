@@ -111,6 +111,8 @@ flowchart TD
 
 ### 3. Live Dashboard Overview & Ingestion Control Bar
 <img width="1470" alt="Dashboard Overview Screen" src="https://github.com/user-attachments/assets/aba9767a-c545-4215-bf89-198f55234ec7" />
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/5f8f6566-0836-4de0-822e-4307fee7d109" />
+
 
 - Logged-in user profile: **`sonavrajarajan@gmail.com`**.
 - **Total Tracked Holding**: `Rs 12,641,750.00 (+12.4%)` dynamically calculated in **INR (Rs.)**.
