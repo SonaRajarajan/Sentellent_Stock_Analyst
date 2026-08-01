@@ -8,7 +8,7 @@
 
 ---
 
-## ⚡ Quick Start: Single Terminal Execution
+## Quick Start: Single Terminal Execution
 
 Run **both Frontend and Backend concurrently from a single terminal**:
 
@@ -27,20 +27,20 @@ cd Sentellent_Stock_Analyst
 
 ---
 
-## 🎨 Dual Workspace Theme Selection (Post-Login Prompt)
+## Dual Workspace Theme Selection (Post-Login Prompt)
 
 After logging in, the application presents a **Theme Selection Screen** with 2 interactive preview boxes:
 
-1. **✨ Midnight Obsidian Theme (`DEFAULT CYBERPUNK`)**:
+1. ** Midnight Obsidian Theme (`DEFAULT CYBERPUNK`)**:
    - Modern dark obsidian interface with glassmorphism, electric blue neon highlights, and smooth vector graphs.
-2. **🕹️ Retro 8-Bit Pixel Art Theme (`RETRO ARCADE`)**:
+2. ** Retro 8-Bit Pixel Art Theme (`RETRO ARCADE`)**:
    - Nostalgic arcade terminal with chunky 4px black pixel borders, retro fonts (**Press Start 2P** & **Silkscreen**), golden coin metrics (₹), and pixelated stock growth board graphics.
 
 *Users can switch themes anytime during their session using the top header or sidebar **`🎮 SWITCH THEME`** button.*
 
 ---
 
-## 📐 System Architecture Flowchart
+## System Architecture Flowchart
 
 ```mermaid
 flowchart TD
@@ -86,7 +86,7 @@ flowchart TD
 
 ---
 
-## 📸 Application Screenshots & Cloud Infrastructure Proof
+## Application Screenshots & Cloud Infrastructure Proof
 
 ### 1. Supabase Production Cloud Console 
 <img width="1470" alt="Supabase Production Cloud Console" src="https://github.com/user-attachments/assets/e01f22ff-42fe-4330-9751-703e0be340e7" />
@@ -160,7 +160,7 @@ flowchart TD
 
 ---
 
-## 🔑 Evaluator Access & Test Accounts
+## Evaluator Access & Test Accounts
 
 Per the challenge specification, pre-configured test user access is available for evaluators:
 - `harisankar@sentellent.com`
@@ -168,7 +168,7 @@ Per the challenge specification, pre-configured test user access is available fo
 
 ---
 
-## 🛠️ Core Tech Stack
+## Core Tech Stack
 
 - **Frontend:** Next.js 14, React 18, TailwindCSS, Recharts
 - **Backend:** Python 3.11+, FastAPI, Uvicorn
