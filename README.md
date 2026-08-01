@@ -8,7 +8,7 @@
 
 ---
 
-## Quick Start: Single Terminal Execution
+## ⚡ Quick Start: Single Terminal Execution
 
 Run **both Frontend and Backend concurrently from a single terminal**:
 
@@ -24,23 +24,24 @@ cd Sentellent_Stock_Analyst
 - **Frontend Application:** [http://localhost:3000](http://localhost:3000)
 - **Backend API Server:** [http://localhost:8000](http://localhost:8000)
 - **Interactive API Documentation:** [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Live Vercel Production:** [https://frontend-hazel-rho-fmju5jw1km.vercel.app](https://frontend-hazel-rho-fmju5jw1km.vercel.app)
 
 ---
 
-## Dual Workspace Theme Selection (Post-Login Prompt)
+## 🎨 Dual Workspace Theme Selection (Post-Login Prompt)
 
 After logging in, the application presents a **Theme Selection Screen** with 2 interactive preview boxes:
 
-1. ** Midnight Obsidian Theme (`DEFAULT CYBERPUNK`)**:
+1. **✨ Midnight Obsidian Theme (`DEFAULT CYBERPUNK`)**:
    - Modern dark obsidian interface with glassmorphism, electric blue neon highlights, and smooth vector graphs.
-2. ** Retro 8-Bit Pixel Art Theme (`RETRO ARCADE`)**:
+2. **🕹️ Retro 8-Bit Pixel Art Theme (`RETRO ARCADE`)**:
    - Nostalgic arcade terminal with chunky 4px black pixel borders, retro fonts (**Press Start 2P** & **Silkscreen**), golden coin metrics (₹), and pixelated stock growth board graphics.
 
 *Users can switch themes anytime during their session using the top header or sidebar **`🎮 SWITCH THEME`** button.*
 
 ---
 
-## System Architecture Flowchart
+## 📐 System Architecture Flowchart
 
 ```mermaid
 flowchart TD
@@ -86,33 +87,33 @@ flowchart TD
 
 ---
 
-## Application Screenshots & Cloud Infrastructure Proof
+## 📸 Application Screenshots & Cloud Infrastructure Proof
 
-### 1. Supabase Production Cloud Console 
+### 1. GitHub Actions CI/CD Pipeline (Passing Green ✓)
+- **Workflow Status**: `✓ Update CI workflow to use latest action versions` (Commit `9a47018` PASSED in 53s)
+- **Live Actions Dashboard**: [https://github.com/SonaRajarajan/Sentellent_Stock_Analyst/actions](https://github.com/SonaRajarajan/Sentellent_Stock_Analyst/actions)
+
+---
+
+### 2. Supabase Production Cloud Console 
 <img width="1470" alt="Supabase Production Cloud Console" src="https://github.com/user-attachments/assets/e01f22ff-42fe-4330-9751-703e0be340e7" />
 
 - **Supabase Cloud Project**: `yhfvgvfbugoajgbxddxx` (`Indian Stock` / `main PRODUCTION`)
 - **Total Requests**: 923 Total Requests (92.6% Success Rate)
-- **Service Breakdown**: API Gateway: 418 requests | Postgres DB: 310 requests | Auth Services: 107 requests | Storage: 59 requests
 - **Vector Engine**: Active PostgreSQL 15 + `pgvector` extension enabled for RAG retrieval
 
 ---
 
-### 2. Authentication & Sign In Portal Screen
+### 3. Authentication & Sign In Portal Screen
 <img width="1470" alt="Authentication & Sign In Portal Screen" src="https://github.com/user-attachments/assets/e1d61f4f-977d-4880-a863-78e367a5d0fc" />
 
 - Mandatory evaluator test user sign-in options for **`harisankar@sentellent.com`** and **`naga@sentellent.com`**.
 - Fast one-click evaluator sign-in for seamless testing on `http://localhost:3000`.
 
 ---
-### Theme Experience Selection - ( Obsidian Mode & Pixel 8-Bit Mode )
-<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/ff07657a-6a77-4db2-84de-67a469d36122" />
 
-
-### 3. Live Dashboard Overview & Ingestion Control Bar
+### 4. Live Dashboard Overview & Ingestion Control Bar
 <img width="1470" alt="Dashboard Overview Screen" src="https://github.com/user-attachments/assets/aba9767a-c545-4215-bf89-198f55234ec7" />
-<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/5f8f6566-0836-4de0-822e-4307fee7d109" />
-
 
 - Logged-in user profile: **`sonavrajarajan@gmail.com`**.
 - **Total Tracked Holding**: `Rs 12,641,750.00 (+12.4%)` dynamically calculated in **INR (Rs.)**.
@@ -120,14 +121,14 @@ flowchart TD
 
 ---
 
-### 4. Tracked Stock Fundamentals & Sentiment Metrics
+### 5. Tracked Stock Fundamentals & Sentiment Metrics
 <img width="1470" alt="Tracked Stock Fundamentals Table" src="https://github.com/user-attachments/assets/79ebe975-25d5-4bb1-9700-aed04371c132" />
 
 - Detailed fundamental breakdown table mapping NSE & BSE symbols, prices in **INR (Rs.)**, P/E ratios, and Debt to Equity metrics (`0.42` for RELIANCE, `0.08` for TCS, `0.85` for HDFCBANK, `0.09` for INFY).
 
 ---
 
-### 5. Tracked Indian Equity Portfolio Manager Screen
+### 6. Tracked Indian Equity Portfolio Manager Screen
 <img width="1470" alt="Tracked Portfolio Manager Screen" src="https://github.com/user-attachments/assets/e133b674-c7c2-4d25-8b76-5b566cae4829" />
 
 - Full portfolio view displaying tracked stock cards (`TCS`, `HDFCBANK`, `RELIANCE`, `INFY`, `TATAMOTORS`, `ITC`, `COALINDIA`, `NTPC`).
@@ -135,14 +136,14 @@ flowchart TD
 
 ---
 
-### 6. Screener Fundamentals & News Detail Modal
+### 7. Screener Fundamentals & News Detail Modal
 <img width="1470" alt="Screener Fundamentals & News Modal" src="https://github.com/user-attachments/assets/704471ca-f2a3-4dfd-8c19-a389205f66c2" />
 
 - Fundamental detail modal displaying market capitalization, P/E ratio, and debt metrics (e.g. Tata Motors Ltd: Market Cap `Rs 365,200 Cr`, P/E `10.8`, Debt/Equity `0.65`).
 
 ---
 
-### 7. Agentic RAG Chief Assistant & Learned Investor Persona
+### 8. Agentic RAG Chief Assistant & Learned Investor Persona
 <img width="1470" alt="Agentic RAG Chief Assistant" src="https://github.com/user-attachments/assets/efcce315-a0ee-412d-a364-e5d6647f8122" />
 
 - Dedicated Agentic RAG Assistant interface backed by LangGraph state machine.
@@ -151,7 +152,7 @@ flowchart TD
 
 ---
 
-### 8. Analytics & Financial Visualizations Page
+### 9. Analytics & Financial Visualizations Page
 <img width="1470" alt="Analytics & Financial Visualizations Page" src="https://github.com/user-attachments/assets/dc213d65-ea76-43d5-8708-63d33374ee0e" />
 
 - **NIFTY 50 & Stock Price Trend Area Chart**: Time-series growth in INR with custom legible tooltips.
@@ -160,7 +161,7 @@ flowchart TD
 
 ---
 
-## Evaluator Access & Test Accounts
+## 🔑 Evaluator Access & Test Accounts
 
 Per the challenge specification, pre-configured test user access is available for evaluators:
 - `harisankar@sentellent.com`
@@ -168,7 +169,7 @@ Per the challenge specification, pre-configured test user access is available fo
 
 ---
 
-## Core Tech Stack
+## 🛠️ Core Tech Stack
 
 - **Frontend:** Next.js 14, React 18, TailwindCSS, Recharts
 - **Backend:** Python 3.11+, FastAPI, Uvicorn
