@@ -32,9 +32,9 @@ cd Sentellent_Stock_Analyst
 
 After logging in, the application presents a **Theme Selection Screen** with 2 interactive preview boxes:
 
-1. ** Midnight Obsidian Theme (`DEFAULT CYBERPUNK`)**:
+1. **Midnight Obsidian Theme (`DEFAULT CYBERPUNK`)**:
    - Modern dark obsidian interface with glassmorphism, electric blue neon highlights, and smooth vector graphs.
-2. ** Retro 8-Bit Pixel Art Theme (`RETRO ARCADE`)**:
+2. **Retro 8-Bit Pixel Art Theme (`RETRO ARCADE`)**:
    - Nostalgic arcade terminal with chunky 4px black pixel borders, retro fonts (**Press Start 2P** & **Silkscreen**), golden coin metrics (₹), and pixelated stock growth board graphics.
 
 *Users can switch themes anytime during their session using the top header or sidebar **`🎮 SWITCH THEME`** button.*
