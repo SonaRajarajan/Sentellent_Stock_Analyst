@@ -105,6 +105,9 @@ flowchart TD
 - Fast one-click evaluator sign-in for seamless testing on `http://localhost:3000`.
 
 ---
+### Theme Experience Selection - ( Obsidian Mode & Pixel 8-Bit Mode )
+<img width="1470" height="956" alt="image" src="https://github.com/user-attachments/assets/ff07657a-6a77-4db2-84de-67a469d36122" />
+
 
 ### 3. Live Dashboard Overview & Ingestion Control Bar
 <img width="1470" alt="Dashboard Overview Screen" src="https://github.com/user-attachments/assets/aba9767a-c545-4215-bf89-198f55234ec7" />
