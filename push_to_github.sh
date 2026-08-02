@@ -6,9 +6,6 @@ echo "=========================================================="
 
 REPO_NAME=${1:-"Sentellent_Stock_Analyst"}
 
-echo "Enter your GitHub Repository URL (or press Enter for default https://github.com/sonavrajarajan/$REPO_NAME.git):"
-read -r GITHUB_URL
-
 if [ -z "$GITHUB_URL" ]; then
   GITHUB_URL="https://github.com/sonavrajarajan/$REPO_NAME.git"
 fi
