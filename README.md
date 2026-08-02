@@ -109,11 +109,19 @@ flowchart TD
 
 - Mandatory evaluator test user sign-in options for **`harisankar@sentellent.com`** and **`naga@sentellent.com`**.
 - Fast one-click evaluator sign-in for seamless testing on `http://localhost:3000`.
+- 
+---
 
+### Choose Your Workspace Theme ( Midnight Obsidian or Retro 8-Bit Pixel Art )
+  <img width="1470" height="835" alt="image" src="https://github.com/user-attachments/assets/ba2c391d-c8ba-447d-bb00-fca671d939a3" />
 ---
 
 ### 4. Live Dashboard Overview & Ingestion Control Bar
 <img width="1470" alt="Dashboard Overview Screen" src="https://github.com/user-attachments/assets/aba9767a-c545-4215-bf89-198f55234ec7" />
+
+<img width="1470" height="829" alt="image" src="https://github.com/user-attachments/assets/d3ceb5f7-ae13-4b3e-9ca3-b5ad645d41f0" />
+
+
 
 - Logged-in user profile: **`sonavrajarajan@gmail.com`**.
 - **Total Tracked Holding**: `Rs 12,641,750.00 (+12.4%)` dynamically calculated in **INR (Rs.)**.
@@ -154,6 +162,9 @@ flowchart TD
 
 ### 9. Analytics & Financial Visualizations Page
 <img width="1470" alt="Analytics & Financial Visualizations Page" src="https://github.com/user-attachments/assets/dc213d65-ea76-43d5-8708-63d33374ee0e" />
+
+<img width="1470" height="833" alt="image" src="https://github.com/user-attachments/assets/225762e1-d644-4339-b12e-45bff1213ffd" />
+
 
 - **NIFTY 50 & Stock Price Trend Area Chart**: Time-series growth in INR with custom legible tooltips.
 - **ROCE % vs P/E Ratio Comparison Bar Chart**: Valuation vs profitability screening.
