@@ -98,6 +98,9 @@ flowchart TD
 ### 2. Supabase Production Cloud Console 
 <img width="1470" alt="Supabase Production Cloud Console" src="https://github.com/user-attachments/assets/e01f22ff-42fe-4330-9751-703e0be340e7" />
 
+<img width="1470" height="832" alt="image" src="https://github.com/user-attachments/assets/3e4343f7-f61c-4d8e-abcb-ac6c7f8ab793" />
+
+
 - **Supabase Cloud Project**: `yhfvgvfbugoajgbxddxx` (`Indian Stock` / `main PRODUCTION`)
 - **Total Requests**: 923 Total Requests (92.6% Success Rate)
 - **Vector Engine**: Active PostgreSQL 15 + `pgvector` extension enabled for RAG retrieval
