@@ -101,6 +101,12 @@ flowchart TD
 <img width="1470" height="832" alt="image" src="https://github.com/user-attachments/assets/3e4343f7-f61c-4d8e-abcb-ac6c7f8ab793" />
 
 
+<img width="1470" height="833" alt="image" src="https://github.com/user-attachments/assets/d901286c-2b61-477a-a39d-3f015756cf86" />
+
+
+<img width="1470" height="829" alt="image" src="https://github.com/user-attachments/assets/24bd2450-d22c-4b07-b848-80d67d9a5d67" />
+
+
 - **Supabase Cloud Project**: `yhfvgvfbugoajgbxddxx` (`Indian Stock` / `main PRODUCTION`)
 - **Total Requests**: 923 Total Requests (92.6% Success Rate)
 - **Vector Engine**: Active PostgreSQL 15 + `pgvector` extension enabled for RAG retrieval
